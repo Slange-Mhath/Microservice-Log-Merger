@@ -1,0 +1,10 @@
+{"files": [
+        {"timestamp": "2021-06-03T11:06:26+0100",
+         "file": {"inode": "153743705", "mode": "664", "gid": "1004",
+                  "uid": "1004", "size": "204800",
+                  "mtime": "2020-01-18T16:51:03+0000",
+                  "path": "/ORA4/PRD/REVIEW/ff/85/03/ff85037813a09ea793b4bc2d860324d65184c20f",
+                  "hash": {
+                      "sha512": "fb25e532f83de78cacee152ad2fbbe1948d18a14a19b9b34260ff99f76ddf4f4dc2f47dd97bc7466d9990e375ce7e413b77a3d6afa068336549e9b5ce2dcf583",
+                      "sha1": "ff85037813a09ea793b4bc2d860324d65184c20f"}}}
+    ]}
