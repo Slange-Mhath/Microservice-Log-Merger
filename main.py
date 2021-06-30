@@ -1,18 +1,17 @@
 import json
 from argparse import ArgumentParser
 import logging
-from pprint import pprint
 
 
-def read_integrity_log_json(dpms_ora_path):
+def read_integrity_log_json(dpms_log_path):
     """
     Reads the file integrity file
-    :param dpms_ora_path: takes the path to the file integrity file (ora)
+    :param dpms_log_path: takes the path to the file integrity file
     :return: returns the file as json
     """
-    dpms_ora_f = open(dpms_ora_path, "r")
-    dpms_ora_json = json.load(dpms_ora_f)
-    return dpms_ora_json
+    dpms_log_f = open(dpms_log_path, "r")
+    dpms_log_json = json.load(dpms_log_f)
+    return dpms_log_json
 
 
 def replace_none_values(log_dict):
@@ -62,7 +61,7 @@ def merge_logs(integrity_log, sf_log):
     For every file in siegfried output which is in the comprehended new dict
     relabel the siegfried output and update it to the now with siegfried output
     enriched output.
-    :param integrity_log: takes the read integrity log (ora)
+    :param integrity_log: takes the read integrity log
     :param sf_log: takes the read siegfried log (sf_log)
     :return: returns the now with siegfried output enriched integrity file.
     """
@@ -96,24 +95,23 @@ def write_merged_f_log(merged_log, dest_file):
         output.write("\n")
 
 
-def main(dpms_ora_path, sf_log, output_file=None):
+def main(dpms_log_path, sf_log, output_file=None):
     """
     Calls the different functions in order to merge and write the final output
-    :param dpms_ora_path: takes the path to the file integrity file (ora)
+    :param dpms_log_path: takes the path to the file integrity file
     :param sf_log: takes the path to the siegfried log file
     :param output_file: takes an optional user specified output file
     :return:
     """
-    integrity_log_json = read_integrity_log_json(dpms_ora_path)
+    integrity_log_json = read_integrity_log_json(dpms_log_path)
     merged_log_files = merge_logs(integrity_log_json, sf_log)
-    pprint(merged_log_files)
     write_merged_f_log(merged_log_files, output_file)
 
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="...")
-    parser.add_argument("dpms_ora_path", metavar="dpms_ora_path", help="Path to the integrity log file")
+    parser.add_argument("dpms_log_path", metavar="dpms_log_path", help="Path to the integrity log file")
     parser.add_argument("sf_log", metavar="sf_log", help="Path to the Siegfried output file")
     parser.add_argument("-o", "--dest_file", dest="dest_file", help="Path to write the merged file log")
     args = parser.parse_args()
-    main(args.dpms_ora_path, args.sf_log, args.dest_file)
+    main(args.dpms_log_path, args.sf_log, args.dest_file)
