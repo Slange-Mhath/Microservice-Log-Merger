@@ -50,7 +50,7 @@ def relabel_log(log, sf_version):
     log = replace_none_values(log)
     sf_output = {"siegfried": log["matches"][0]}
     if sf_output["siegfried"]:
-        sf_output = replace_none_values(sf_output["siegfried"])
+        sf_output["siegfried"] = replace_none_values(sf_output["siegfried"])
     return sf_output
 
 
