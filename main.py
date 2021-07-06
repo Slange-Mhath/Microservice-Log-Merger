@@ -1,6 +1,7 @@
 import json
 from argparse import ArgumentParser
-from helper import load_json, merge_logs, write_merged_f_log
+from helper import load_json, write_merged_f_log
+from merge_siegfried import relabel_siegfried_log, merge_logs
 import logging
 
 
@@ -96,7 +97,7 @@ import logging
 #         output.write("\n")
 
 
-def main(base_log_path, sf_log, output_file=None):
+def main(base_log_path, sf_log, exif_log, output_file=None):
     """
     Calls the different functions in order to merge and write the final output
     :param dpms_log_path: takes the path to the file integrity file
@@ -104,8 +105,14 @@ def main(base_log_path, sf_log, output_file=None):
     :param output_file: takes an optional user specified output file
     :return:
     """
+    merged_log_files = {}
     base_log_json = load_json(base_log_path)
-    merged_log_files = merge_logs(base_log_json, sf_log)
+    if sf_log:
+        merged_log_files = merge_logs(base_log_json, sf_log, "filename")
+        if exif_log:
+            ...
+
+
     write_merged_f_log(merged_log_files, output_file)
 
 
@@ -113,6 +120,7 @@ if __name__ == "__main__":
     parser = ArgumentParser(description="...")
     parser.add_argument("base_log_path", metavar="base_log_path", help="Path to the base log file which should be merged with the others")
     parser.add_argument("sf_log", metavar="sf_log", help="Path to the Siegfried output file")
+    parser.add_argument("-o", "--exif_log", dest="dest_file", help="Path to the exif log file")
     parser.add_argument("-o", "--dest_file", dest="dest_file", help="Path to write the merged file log")
     args = parser.parse_args()
-    main(args.dpms_log_path, args.sf_log, args.dest_file)
+    main(args.base_log_path, args.sf_log, args.exif_log, args.dest_file)
