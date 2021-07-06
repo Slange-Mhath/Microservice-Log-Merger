@@ -43,21 +43,12 @@ def merge_logs(base_log, enriching_log, matching_key):
     respective file in the base_log
     :return: returns the now with siegfried output enriched integrity file.
     """
-    enriched_base_log = {}
+    enriched_base_log = base_log
     # uses the file_path to become the parent key of the enriched_output to have
     # a anchor point to map the log files which will enrich the enriched output.
-    for f in base_log["files"]:
-        enriched_base_log[f["file"]["path"]] = f
-    for enriching_output in open(enriching_log, "r"):
-        enriching_json = json.loads(enriching_output)
-        try:
-            sf_version = enriching_json["siegfried"]
-        except KeyError:
-            sf_version = "unknown"
-        for f in enriching_json["files"]:
-            # TODO: This is iterating over every file in the siegfried_output however, we cant be sure that every output is structured like that and it is unlikely that every output has a "file" key to iterate over
-            if f[matching_key] in enriched_base_log:
-                # TODO: filename in siegfried output is the path which should match to the key created in l.42-43. However not every output might call that filename maybe this has to be a variable given as parameter. Like matching_achnor or file_name if its everytime the filename which matches.
-                # TODO: relabel shouldn't be called here but before the merge_logs file probably to modify the enriching log independent
-                enriched_base_log[f[matching_key]].update(relabel_siegfried_log(f, sf_version)) # TODO: Update ... mit dem gelabelten enriching_output.
+    enriching_output = open(enriching_log, "r")
+    enriching_json = json.loads(enriching_output) # Maybe I have to use the for loop from the other merge_logs methods in l51-52
+    for f in enriching_json:
+        if f[matching_key] in enriched_base_log:
+            enriched_base_log[f[matching_key]].update(relabel_exif_log(f, None))
     return enriched_base_log

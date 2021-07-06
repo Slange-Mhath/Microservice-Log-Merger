@@ -115,6 +115,7 @@ def main(base_log_path, sf_log, exif_log, output_file=None):
 
     write_merged_f_log(merged_log_files, output_file)
 
+# TODO: Maybe I want to use a control structure to get rid of the messy if clauses
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="...")
