@@ -31,16 +31,16 @@ if __name__ == "__main__":
     parser.add_argument("-base_log_path", metavar="base_log_path",
                         help="Path to the base log file which should be "
                              "merged with the others")
-    parser.add_argument("-sf_log", metavar="sf_log",
+    parser.add_argument("-sf_log_path", metavar="sf_log_path",
                         help="Path to the Siegfried output file")
-    parser.add_argument("-exif", "--exif_log", dest="exif_log",
+    parser.add_argument("-exif_log_path", "--exif_log_path", dest="exif_log_path",
                         help="Path to the exif log file")
-    parser.add_argument("-dest", "--dest_file", dest="dest_file",
+    parser.add_argument("-dest_file_path", "--dest_file_path", dest="dest_file_path",
                         help="Path to write the merged file log")
-    parser.add_argument("-f_keys_to_del", "--f_keys_to_del",
-                        dest="f_keys_to_del",
+    parser.add_argument("-f_keys_to_del_path", "--f_keys_to_del_path",
+                        dest="f_keys_to_del_path",
                         help="Path to a file with keys we don't want to have "
                              "in the exif log")
     args = parser.parse_args()
-    main(args.base_log_path, args.sf_log, args.exif_log, args.dest_file,
-         args.f_keys_to_del)
+    main(args.base_log_path, args.sf_log_path, args.exif_log_path, args.dest_file_path,
+         args.f_keys_to_del_path)

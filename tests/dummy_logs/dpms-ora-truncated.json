@@ -1,0 +1,6 @@
+{ "files": [
+{"timestamp": "2021-07-02T01:00:03+0100","file": { "inode": "6615578", "mode": "664", "gid": "1004", "uid": "1004", "size": "19685", "mtime": "2018-03-19T01:02:04+0000","path": "/ORA/PRD/DATA/ora_var/fedora/objects/2008/0520/10/26/uuid_f07ecc49-0e77-43d3-bbaa-a69a515f8c0c","hash": {"sha512": "90255907859d49400914eb96f0c1cf16d0abb09c14c57df6e6ab69d03cb5c9852a2607f7c0f8a3b38896554e7ed5f6cb3bb38db4b91d67b1502a02a432a5878c"}}},
+{"timestamp": "2021-06-02T01:00:03+0100","file": { "inode": "6615583", "mode": "664", "gid": "1004", "uid": "1004", "size": "20004", "mtime": "2018-03-18T20:29:23+0000","path": "/ORA/PRD/DATA/ora_var/fedora/objects/2008/0520/10/26/uuid_7a79f51b-509f-476f-b1d0-1466dbfd9c78","hash": {"sha512": "c6e6317f6eabe876200ab83bbf075c88e1d5a0dc0bf62ac20a52391b39ab66bf850238b3c2720da403dd521fab7f01e99e8cfbc6487613fb3e573cc9f1ce2f56"}}},
+{"timestamp": "2021-06-02T01:00:03+0100","file": { "inode": "6615583", "mode": "664", "gid": "1004", "uid": "1004", "size": "20004", "mtime": "2018-03-18T20:29:23+0000","path": "/ORA/PRD/DATA/ora_var/fedora/objects/2008/0520/10/26/uuid_7a79f51b-509f-476f-b1d0-1466dbfd9c78","hash": {"sha512": "c6e6317f6eabe876200ab83bbf075c88e1d5a0dc0bf62ac20a52391b39ab66bf850238b3c2720da403dd521fab7f01e99e8cfbc6487613fb3e573cc9f1ce2f86"}}}
+
+]}

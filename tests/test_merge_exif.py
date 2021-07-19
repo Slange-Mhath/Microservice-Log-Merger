@@ -24,7 +24,7 @@ def test_exif_log():
 
 @pytest.fixture()
 def test_file():
-    path_to_ora_file = "logs/dpms-ora-truncated.json"
+    path_to_ora_file = "tests/dummy_logs/dpms-ora-truncated.json"
     return path_to_ora_file
 
 

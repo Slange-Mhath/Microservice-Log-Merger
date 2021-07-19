@@ -9,29 +9,29 @@ Currently our MLM is supporting [Siegfried](https://github.com/richardlehane/sie
 
 ### Merging only the base output with the Siegfried output:
 
-`python3 main.py -base_log_path "my_base_file_.json" -sf_log "my-siegfried_output.log"  -dest "my_finally_merged_file.json"`
+`python3 main.py -base_log_path "my_base_file_.json" -sf_log_path "my-siegfried_output.log"  -dest_file_path "my_finally_merged_file.json"`
 
 
 **-base_log_path**  
 Specify the path to the base log file which should be enriched with the Siegfried log. Please ensure that your file follows the example structure specified [here](#base_file).  
-**-sf_log**  
+**-sf_log_path**  
 Specify the Siegfried file which should be merged into the base log. Please ensure that your file follows the example structure specified [here](#siegfried-output).  
-**-dest**  
+**-dest_file_path**  
 Specify the file path to the file where the merged output should be written to. 
 
 ### Optional parameters:
 
 The MLM currently supports [Exif](https://github.com/exiftool/exiftool) as well. To add the Exif tool output to the merged file add the following parameters.  
 
-**-exif**  
+**-exif_log_path**  
 Specify the Exif file which should be added as key to the merged log. Please ensure that your file follows the example structure specified [here](#exif-output).
 
-**-f_keys_to_delete**  
+**-f_keys_to_delete_path**  
 This is again an optional parameter. It can be used to specify a file path to a file which can contain different key names to delete them from the Exif log file to decrease verbosity. Please stick to the recommended file structure specified [here](#keys-to-delete).  
 
 
 Running the script with every optional parameter would look like this:  
-```python3 main.py -base_log_path "base_file.json" -sf_log "siegfried.log" -exif "exif.log" -dest "merged_log.json" -f_keys_to_del "key_list.log"```
+```python3 main.py -base_log_path "base_file.json" -sf_log_path "siegfried.log" -exif_log_path "exif.log" -dest_file_path "merged_log.json" -f_keys_to_del_path "key_list.log"```
 
 ## File structures
 
