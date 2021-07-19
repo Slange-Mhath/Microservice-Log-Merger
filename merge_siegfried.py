@@ -30,7 +30,7 @@ def relabel_siegfried_log(log, sf_version):
     return sf_output
 
 
-def merge_logs(base_log, enriching_log, matching_key):
+def merge_sf_logs(base_log, enriching_log, matching_key):
     """
     Uses dict comprehension to create a new dict which adds the siegfried output
     at the matching file paths.
@@ -55,9 +55,7 @@ def merge_logs(base_log, enriching_log, matching_key):
         except KeyError:
             sf_version = "unknown"
         for f in enriching_json["files"]:
-            # TODO: This is iterating over every file in the siegfried_output however, we cant be sure that every output is structured like that and it is unlikely that every output has a "file" key to iterate over
             if f[matching_key] in enriched_base_log:
-                # TODO: filename in siegfried output is the path which should match to the key created in l.42-43. However not every output might call that filename maybe this has to be a variable given as parameter. Like matching_achnor or file_name if its everytime the filename which matches.
-                # TODO: relabel shouldn't be called here but before the merge_logs file probably to modify the enriching log independent
-                enriched_base_log[f[matching_key]].update(relabel_siegfried_log(f, sf_version)) # TODO: Update ... mit dem gelabelten enriching_output.
+                enriched_base_log[f[matching_key]].update(
+                    relabel_siegfried_log(f, sf_version))
     return enriched_base_log

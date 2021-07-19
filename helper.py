@@ -35,3 +35,10 @@ def write_merged_f_log(merged_log, dest_file):
     for f in merged_log.values():
         json.dump(f, output, sort_keys=True, ensure_ascii=False)
         output.write("\n")
+
+
+def read_key_list(key_list_f):
+    if key_list_f:
+        with open(key_list_f) as f:
+            keys = f.read().splitlines()
+        return keys

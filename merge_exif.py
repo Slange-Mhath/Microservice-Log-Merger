@@ -1,8 +1,9 @@
 from helper import replace_none_values
 import json
+from helper import read_key_list
 
 
-def relabel_exif_log(log, custom_useless_keys):
+def relabel_exif_log(log, f_keys_to_del):
     """
     Relabels the Siegfried output to fit our needs. Therefore deletes
     superficial keys and replaces the 'matches' key with the siegfried version
@@ -17,8 +18,9 @@ def relabel_exif_log(log, custom_useless_keys):
                     "FileAccessDate", "FileInodeChangeDate", "FilePermissions",
                     "FileType",
                     "FileTypeExtension", "MIMEType"]
-    if custom_useless_keys:
-        useless_keys = list(set(useless_keys + custom_useless_keys))
+    keys_to_delete = read_key_list(f_keys_to_del)
+    if keys_to_delete:
+        useless_keys = list(set(useless_keys + keys_to_delete))
     for key in useless_keys:
         if key in log:
             del log[key]
@@ -30,7 +32,7 @@ def relabel_exif_log(log, custom_useless_keys):
     return exif_output
 
 
-def merge_logs(base_log, enriching_log, matching_key):
+def merge_exif_logs(base_log, enriching_log, matching_key, f_keys_to_del):
     """
     Uses dict comprehension to create a new dict which adds the siegfried output
     at the matching file paths.
@@ -46,9 +48,11 @@ def merge_logs(base_log, enriching_log, matching_key):
     enriched_base_log = base_log
     # uses the file_path to become the parent key of the enriched_output to have
     # a anchor point to map the log files which will enrich the enriched output.
-    enriching_output = open(enriching_log, "r")
-    enriching_json = json.loads(enriching_output) # Maybe I have to use the for loop from the other merge_logs methods in l51-52
-    for f in enriching_json:
-        if f[matching_key] in enriched_base_log:
-            enriched_base_log[f[matching_key]].update(relabel_exif_log(f, None))
+    with open(enriching_log) as json_file:
+        json_obj = json.load(json_file)
+        json_file.close()
+        for f in json_obj:
+            if f[matching_key] in enriched_base_log:
+                enriched_base_log[f[matching_key]].update(
+                    relabel_exif_log(f, f_keys_to_del))
     return enriched_base_log
