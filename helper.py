@@ -33,7 +33,7 @@ def write_merged_f_log(merged_log, dest_file):
     """
     output = open(dest_file, "w", encoding="utf-8")
     for f in merged_log.values():
-        json.dump(f, output, sort_keys=True, ensure_ascii=False)
+        json.dump(f, output, sort_keys=True, ensure_ascii=True)
         output.write("\n")
 
 
