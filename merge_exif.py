@@ -1,6 +1,5 @@
-from helper import replace_none_values
+from helper import replace_none_values, read_key_list, delete_keys_with_str_seq
 import json
-from helper import read_key_list
 
 
 def relabel_exif_log(log, f_keys_to_del):
@@ -29,6 +28,7 @@ def relabel_exif_log(log, f_keys_to_del):
     exif_output = {"exif": log}
     if exif_output["exif"]:
         exif_output["exif"] = replace_none_values(exif_output["exif"])
+        exif_output["exif"] = delete_keys_with_str_seq(exif_output["exif"], useless_keys)
     return exif_output
 
 

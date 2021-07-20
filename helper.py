@@ -42,3 +42,24 @@ def read_key_list(key_list_f):
         with open(key_list_f) as f:
             keys = f.read().splitlines()
         return keys
+
+
+def delete_keys_with_str_seq(log_dict, list_of_keys):
+    """
+    :param log_dict:
+    :param list_of_keys:
+    :return:
+    """
+    if list_of_keys:
+        # This creates a list of wildcards from the list of keys
+        # This could possibly be an extra function
+        list_of_str_seq = [k for k in list_of_keys if k.endswith("*")]
+        if list_of_str_seq:
+            for str_seq in list_of_str_seq:
+                for key in list(log_dict.keys()):
+                    if key.startswith(str_seq[:-1]):
+                        # this checks if the key in the log starts with the wildcard
+                        # sequence while ignoring the *
+                        key_to_delete = key
+                        del log_dict[key_to_delete]
+        return log_dict

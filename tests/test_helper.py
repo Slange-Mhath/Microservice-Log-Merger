@@ -1,7 +1,6 @@
 import pytest
-from helper import load_json
-from helper import replace_none_values
-from helper import read_key_list
+from helper import load_json, replace_none_values, read_key_list, delete_keys_with_str_seq
+
 
 
 @pytest.fixture()
@@ -26,6 +25,52 @@ def test_file():
 def test_key_list_file():
     key_list_file = "tests/dummy_logs/key_list.log"
     return key_list_file
+
+
+@pytest.fixture()
+def test_list_of_str_seq():
+    list_of_seq = ["ExifZ*", "ExifA*", "Exif12*", "ExifT*"]
+    return list_of_seq
+
+
+@pytest.fixture()
+def test_exif_dict():
+    example_log = {
+        "SourceFile": "/ORA/PRD/DATA/ora_var/fedora/objects/2008/0520/10/26/uuid_7a79f51b-509f-476f-b1d0-1466dbfd9c78",
+        "ExifToolVersion": 12.16,
+        "FileName": "2_PEARCE_Qualitative_collated_themes.xlsx",
+        "Directory": "/ORA4/PRD/PUBLIC/00/98/95/76/uuid:00989576-dd33-458b-b8cd-e49b7e845ee6",
+        "FileSize": "108 KiB",
+        "ZipRequiredVersion": 20,
+        "ZipBitFlag": "0x0006",
+        "ZipCompression": "Deflated",
+        "ZipModifyDate": "1980:01:01 00:00:00",
+        "ZipCRC": "0x78c4a176",
+        "ZipCompressedSize": 448,
+        "ZipUncompressedSize": 4226,
+        "ZipFileName": "[Content_Types].xml",
+        "ScaleCrop": "No",
+        "HeadingPairs": [
+            "Worksheets",
+            23
+        ],
+        "TitlesOfParts": [
+            "20_integration_into_life",
+            "21_motivation",
+            "22_localresources"
+        ],
+        "LastModifiedBy": "Eiluned Pearce",
+        "CreateDate": "2016:03:11 15:17:02Z",
+        "ModifyDate": "2016:05:23 09:53:07Z",
+        "ExifZitteraal": "Udo",
+        "ExifZementmaschine": "Ulf",
+        "ExifZentralrat": "Urs",
+        "ExifZimmermann": "Rolf",
+        "ExifZwangsehe": "Hannah",
+        "ExifZalamanda": "Feuer",
+
+    }
+    return example_log
 
 
 @pytest.fixture()
@@ -67,3 +112,10 @@ def test_read_key_list(test_key_list_file):
     list_of_keys = read_key_list(test_key_list_file)
     assert isinstance(list_of_keys, list)
     assert len(list_of_keys) is not 0
+
+
+def test_delete_keys_with_string_seq(test_exif_dict, test_list_of_str_seq):
+    cleaned_dict = delete_keys_with_str_seq(test_exif_dict, test_list_of_str_seq)
+    assert cleaned_dict is not None
+
+
