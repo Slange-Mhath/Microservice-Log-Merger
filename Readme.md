@@ -27,7 +27,10 @@ The MLM currently supports [Exif](https://github.com/exiftool/exiftool) as well.
 Specify the Exif file which should be added as key to the merged log. Please ensure that your file follows the example structure specified [here](#exif-output).
 
 **-f_keys_to_delete_path**  
-This is again an optional parameter. It can be used to specify a file path to a file which can contain different key names to delete them from the Exif log file to decrease verbosity. Please stick to the recommended file structure specified [here](#keys-to-delete).  
+This is again an optional parameter. It can be used to specify a file path to a file which can contain different key names to delete them from the Exif log file to decrease verbosity.   
+To delete every key starting with a specific string sequence an asterics can be added at the end of the key name/string sequence.   
+E.g.: ExifT* will delete every key starting with ExifT.
+Please stick to the recommended file structure specified [here](#keys-to-delete).  
 
 
 Running the script with every optional parameter would look like this:  

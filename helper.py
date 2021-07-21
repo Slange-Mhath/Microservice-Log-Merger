@@ -38,6 +38,10 @@ def write_merged_f_log(merged_log, dest_file):
 
 
 def read_key_list(key_list_f):
+    """
+    :param key_list_f: text file with keys per line
+    :return: list with keys
+    """
     if key_list_f:
         with open(key_list_f) as f:
             keys = f.read().splitlines()
@@ -46,14 +50,15 @@ def read_key_list(key_list_f):
 
 def delete_keys_with_str_seq(log_dict, list_of_keys):
     """
-    :param log_dict:
-    :param list_of_keys:
-    :return:
+    :param log_dict: takes a dict with the superficial keys
+    :param list_of_keys: takes a list of keys
+    :return: cleaned log_dict from the keys that matches the seq with*
     """
     if list_of_keys:
         # This creates a list of wildcards from the list of keys
         # This could possibly be an extra function
         list_of_str_seq = [k for k in list_of_keys if k.endswith("*")]
+        # filters every key which ends of * and saves it to a list of str seqs
         if list_of_str_seq:
             for str_seq in list_of_str_seq:
                 for key in list(log_dict.keys()):
