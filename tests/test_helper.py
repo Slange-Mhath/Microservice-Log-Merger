@@ -75,7 +75,7 @@ def test_exif_dict():
 
 @pytest.fixture()
 def dict_with_none_value():
-    example_dict = {"ns": "pronom", "id": "UNKNOWN", "format": "",
+    example_dict = {"ns": "pronom", "id": "UNKNOWN", "format": None,
                     "version": "", "mime": "", "basis": "",
                     "warning": "no match", "zero_value": 0, "false_value": False}
     return example_dict
@@ -105,6 +105,7 @@ def test_load_json(test_file):
 def test_replace_non_value(dict_with_none_value):
     replaced_dict = replace_none_values(dict_with_none_value)
     for item in replaced_dict.items():
+        print(item)
         assert item is not None
 
 

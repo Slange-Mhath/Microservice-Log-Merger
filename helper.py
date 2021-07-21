@@ -21,7 +21,7 @@ def replace_none_values(log_dict):
     :return: returns the replaced dict
     """
     if isinstance(log_dict, dict):
-        log_dict = {k: "unknown" if v is None else v for k, v in log_dict.items()}
+        log_dict = {k: "unknown" if v is None or not str(v) else v for k, v in log_dict.items()}
     return log_dict
 
 
