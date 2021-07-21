@@ -1,6 +1,6 @@
 import pytest
-from helper import load_json, replace_none_values, read_key_list, delete_keys_with_str_seq
-
+from helper import load_json, replace_none_values, read_key_list, \
+    delete_keys_with_str_seq
 
 
 @pytest.fixture()
@@ -77,7 +77,7 @@ def test_exif_dict():
 def dict_with_none_value():
     example_dict = {"ns": "pronom", "id": "UNKNOWN", "format": "",
                     "version": "", "mime": "", "basis": "",
-                    "warning": "no match"}
+                    "warning": "no match", "zero_value": 0, "false_value": False}
     return example_dict
 
 
@@ -115,7 +115,6 @@ def test_read_key_list(test_key_list_file):
 
 
 def test_delete_keys_with_string_seq(test_exif_dict, test_list_of_str_seq):
-    cleaned_dict = delete_keys_with_str_seq(test_exif_dict, test_list_of_str_seq)
+    cleaned_dict = delete_keys_with_str_seq(test_exif_dict,
+                                            test_list_of_str_seq)
     assert cleaned_dict is not None
-
-
