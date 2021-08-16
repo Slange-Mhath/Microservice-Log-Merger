@@ -1,6 +1,6 @@
 import pytest
-from merge_exif import relabel_exif_log, merge_exif_logs
-from helper import read_key_list, load_json
+from merge_exif import merge_exif_to_base_log
+from helper import load_json, read_key_list
 from merge_siegfried import merge_sf_logs
 
 
@@ -100,7 +100,8 @@ def test_exif_dict():
         "Creator": "Eiluned Pearce",
         "LastModifiedBy": "Eiluned Pearce",
         "CreateDate": "2016:03:11 15:17:02Z",
-        "ModifyDate": "2016:05:23 09:53:07Z"
+        "ModifyDate": "2016:05:23 09:53:07Z",
+        "Author": ""
     }
     return example_log
 
@@ -111,31 +112,26 @@ def test_key_list_file():
     return key_list_file
 
 
-def test_relabel_exif_log_for_superficial_keys(test_exif_dict,
-                                               test_key_list_file):
-    relabeled_log = relabel_exif_log(test_exif_dict, test_key_list_file)
-    keys_to_delete = read_key_list(test_key_list_file)
-    for k in relabeled_log["exif"].keys():
-        assert k not in keys_to_delete
-
-
-def test_relabel_exif_log_for_none_values(test_exif_dict, test_key_list_file):
-    relabeled_log = relabel_exif_log(test_exif_dict, test_key_list_file)
-    for k in relabeled_log["exif"].values():
-        assert k is not None
-
-
-def test_merge_exif_logs(test_ora_log, test_sf_log, test_exif_log):
+def test_merge_exif_to_base_log(test_ora_log, test_sf_log, test_exif_log,
+                                test_key_list_file):
     merged_sf_log = merge_sf_logs(load_json(test_ora_log), test_sf_log,
                                   "filename")
-    merged_logs_with_exif = merge_exif_logs(merged_sf_log, test_exif_log,
-                                            "SourceFile", None)
-    # log_file_tools stores the different keys of the merged log file. This is
-    # why we can make the assumption that exif and siegfried are both stored in
-    # this list (timestamp and file are superficial in this purpose but wont
-    # hurt for validation)
-    log_file_tools = []
-    for keys in merged_logs_with_exif.values():
-        for key in keys.keys():
-            log_file_tools.append(key)
-    assert "exif" in log_file_tools
+    merged_logs_with_exif = merge_exif_to_base_log(test_exif_log, merged_sf_log,
+                                                   test_key_list_file,
+                                                   "SourceFile")
+    for f in merged_sf_log:
+        assert "exif" in merged_logs_with_exif[f].keys()
+
+
+def test_desired_exif_keys(test_ora_log, test_sf_log, test_exif_log,
+                                test_key_list_file):
+    merged_sf_log = merge_sf_logs(load_json(test_ora_log), test_sf_log,
+                                  "filename")
+    desired_keys = read_key_list(test_key_list_file)
+    merged_logs_with_exif = merge_exif_to_base_log(test_exif_log, merged_sf_log,
+                                                   test_key_list_file,
+                                                   "SourceFile")
+    for f in merged_sf_log:
+        exif_keys = merged_logs_with_exif[f]["exif"].keys()
+        for exif_k in exif_keys:
+            assert exif_k in desired_keys

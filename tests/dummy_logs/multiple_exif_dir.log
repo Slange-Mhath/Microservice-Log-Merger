@@ -17,6 +17,8 @@
   "ZipModifyDate": "2017:01:04 12:21:36",
   "ZipCRC": "0xaaf21001",
   "ZipCompressedSize": 1720,
+  "Author": "x",
+  "ScaleCrop": "RoboCop",
   "ZipUncompressedSize": 4132,
   "ZipFileName": "JMolSpec ORA data/depolarise.m",
   "Warning": "[minor] Use the Duplicates option to extract tags for all 7 files"
@@ -90,6 +92,8 @@
   "SharedDoc": "No",
   "HyperlinksChanged": "No",
   "AppVersion": 14.0300,
+  "Author": "",
+  "ScaleCrop": "RoboCop",
   "Creator": "Eiluned Pearce",
   "LastModifiedBy": "Eiluned Pearce",
   "CreateDate": "2016:03:11 15:17:02Z",

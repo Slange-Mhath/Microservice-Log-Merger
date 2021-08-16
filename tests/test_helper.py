@@ -1,6 +1,5 @@
 import pytest
-from helper import load_json, replace_none_values, read_key_list, \
-    delete_keys_with_str_seq
+from helper import load_json, replace_none_values, read_key_list
 
 
 @pytest.fixture()
@@ -115,7 +114,3 @@ def test_read_key_list(test_key_list_file):
     assert len(list_of_keys) is not 0
 
 
-def test_delete_keys_with_string_seq(test_exif_dict, test_list_of_str_seq):
-    cleaned_dict = delete_keys_with_str_seq(test_exif_dict,
-                                            test_list_of_str_seq)
-    assert cleaned_dict is not None
