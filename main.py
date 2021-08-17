@@ -2,10 +2,11 @@ from argparse import ArgumentParser
 from helper import load_json, write_merged_f_log
 from merge_siegfried import merge_sf_logs
 from merge_exif import merge_exif_to_base_log
+from merge_mediainfo import merge_mediainfo
 import logging
 
 
-def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None):
+def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None, mediainfo_log=None):
     """
     Calls the different functions in order to merge and write the final output
     :param dpms_log_path: takes the path to the file integrity file
@@ -23,6 +24,8 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None):
                 return
             merged_log_files = merge_exif_to_base_log(exif_log, merged_log_files,
                                                f_key_list, matching_key="SourceFile")
+        if mediainfo_log:
+            merged_log_files = merge_mediainfo(merged_log_files, mediainfo_log, matching_key="@ref")
 
     write_merged_f_log(merged_log_files, output_file)
 
@@ -42,5 +45,7 @@ if __name__ == "__main__":
                         help="Path to write the merged file log")
     parser.add_argument("-f_key_list", "--f_key_list", dest="f_key_list",
                         help="Path to a file with keys we want to store in our exif log")
+    parser.add_argument("-mediainfo_log_path", "--mediainfo_log_path", dest="mediainfo_log_path",
+                        help="Path to the mediainfo log file")
     args = parser.parse_args()
-    main(args.base_log_path, args.sf_log_path, args.exif_log_path, args.f_key_list, args.dest_file_path)
+    main(args.base_log_path, args.sf_log_path, args.exif_log_path, args.f_key_list, args.dest_file_path, args.mediainfo_log_path)
