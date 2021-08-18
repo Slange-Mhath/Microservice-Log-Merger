@@ -6,7 +6,8 @@ from merge_mediainfo import merge_mediainfo
 import logging
 
 
-def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None, mediainfo_log=None):
+def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
+         mediainfo_log=None):
     """
     Calls the different functions in order to merge and write the final output
     :param dpms_log_path: takes the path to the file integrity file
@@ -20,17 +21,28 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None, med
         merged_log_files = merge_sf_logs(base_log_json, sf_log, "filename")
         if exif_log:
             if not f_key_list:
-                logging.error("Please provide a file with the keys if you want to merge the Exif log.")
+                logging.error(
+                    "Please provide a file with the keys if you want to merge "
+                    "the Exif log.")
                 return
-            merged_log_files = merge_exif_to_base_log(exif_log, merged_log_files,
-                                               f_key_list, matching_key="SourceFile")
+            merged_log_files = merge_exif_to_base_log(exif_log,
+                                                      merged_log_files,
+                                                      f_key_list,
+                                                      matching_key="SourceFile")
         if mediainfo_log:
-            merged_log_files = merge_mediainfo(merged_log_files, mediainfo_log, matching_key="@ref")
+            if not f_key_list:
+                logging.error(
+                    "Please provide a file with the keys if you want to merge "
+                    "the Mediainfo log.")
+                return
+            merged_log_files = merge_mediainfo(merged_log_files, mediainfo_log,
+                                               f_key_list, matching_key="@ref")
 
     write_merged_f_log(merged_log_files, output_file)
 
 
-# TODO: Maybe I want to use a control structure to get rid of the messy if clauses
+# TODO: Maybe I want to use a control structure to get rid of the messy if
+#  clauses
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="...")
@@ -39,13 +51,18 @@ if __name__ == "__main__":
                              "merged with the others")
     parser.add_argument("-sf_log_path", metavar="sf_log_path",
                         help="Path to the Siegfried output file")
-    parser.add_argument("-exif_log_path", "--exif_log_path", dest="exif_log_path",
+    parser.add_argument("-exif_log_path", "--exif_log_path",
+                        dest="exif_log_path",
                         help="Path to the exif log file")
-    parser.add_argument("-dest_file_path", "--dest_file_path", dest="dest_file_path",
+    parser.add_argument("-dest_file_path", "--dest_file_path",
+                        dest="dest_file_path",
                         help="Path to write the merged file log")
     parser.add_argument("-f_key_list", "--f_key_list", dest="f_key_list",
-                        help="Path to a file with keys we want to store in our exif log")
-    parser.add_argument("-mediainfo_log_path", "--mediainfo_log_path", dest="mediainfo_log_path",
+                        help="Path to a file with keys we want to store in our "
+                             "exif log")
+    parser.add_argument("-mediainfo_log_path", "--mediainfo_log_path",
+                        dest="mediainfo_log_path",
                         help="Path to the mediainfo log file")
     args = parser.parse_args()
-    main(args.base_log_path, args.sf_log_path, args.exif_log_path, args.f_key_list, args.dest_file_path, args.mediainfo_log_path)
+    main(args.base_log_path, args.sf_log_path, args.exif_log_path,
+         args.f_key_list, args.dest_file_path, args.mediainfo_log_path)

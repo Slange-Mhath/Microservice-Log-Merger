@@ -21,13 +21,22 @@ Specify the file path to the file where the merged output should be written to.
 
 ### Optional parameters:
 
-The MLM currently supports [Exif](https://github.com/exiftool/exiftool) as well. To add the Exif tool output to the merged file add the following parameters.  
+The MLM currently supports [Exif](https://github.com/exiftool/exiftool), and [Mediainfo](https://mediaarea.net/en/MediaInfo) as well. To add the Exif tool output to the merged file add the following parameters.  
 
 **-exif_log_path**  
 Specify the Exif file which should be added as key to the merged log. Please ensure that your file follows the example structure specified [here](#exif-output).
 
 **-f_key_list**  
-This parameter is <strong>mandatory if the exif_log_path parameter is added. </strong> It should be used to specify a file path to a file which should contain the name of those keys from the Exif log, which we want to merge.
+This parameter is <strong>mandatory if the exif_log_path parameter is added. </strong> It should be used to specify a file path to a file which should contain the name of those keys from the log, which we want to merge.
+Please stick to the recommended file structure specified [here](#key-list).  
+
+To add the Mediainfo output to the merged file use the following parameters: 
+
+**-mediainfo_log_path**  
+Specify the Exif file which should be added as key to the merged log. Please ensure that your file follows the example structure specified [here](#exif-output).
+
+**-f_key_list**  
+This parameter is <strong>mandatory if the mediainfo_log_path parameter is added. </strong> It should be used to specify a file path to a file which should contain the name of those keys from the log, which we want to merge.
 Please stick to the recommended file structure specified [here](#key-list).  
 
 
@@ -147,6 +156,161 @@ Running the script with every optional parameter would look like this:
   "ModifyDate": "2016:05:23 09:53:07Z"
 }]
 ```
+
+### Mediainfo
+
+```json
+[{
+        "media": {
+            "@ref": "./window_one.jpg",
+            "track": [{
+                    "@type": "General",
+                    "Count": "331",
+                    "StreamCount": "1",
+                    "StreamKind": "General",
+                    "StreamKind_String": "General",
+                    "StreamKindID": "0",
+                    "ImageCount": "1",
+                    "Image_Format_List": "JPEG",
+                    "Image_Format_WithHint_List": "JPEG",
+                    "Image_Codec_List": "JPEG",
+                    "CompleteName": "./window_one.jpg",
+                    "FolderName": ".",
+                    "FileNameExtension": "window_one.jpg",
+                    "FileName": "window_one",
+                    "FileExtension": "jpg",
+                    "Format": "JPEG",
+                    "Format_String": "JPEG",
+                    "Format_Extensions": "h3d jpeg jpg jpe jps mpo",
+                    "Format_Commercial": "JPEG",
+                    "InternetMediaType": "image/jpeg",
+                    "FileSize": "11162",
+                    "FileSize_String": "10.9 KiB",
+                    "FileSize_String1": "11 KiB",
+                    "FileSize_String2": "11 KiB",
+                    "FileSize_String3": "10.9 KiB",
+                    "FileSize_String4": "10.90 KiB",
+                    "StreamSize": "0",
+                    "StreamSize_String": "0.00 Byte (0%)",
+                    "StreamSize_String1": " Byte0",
+                    "StreamSize_String2": "0.0 Byte",
+                    "StreamSize_String3": "0.00 Byte",
+                    "StreamSize_String4": "0.000 Byte",
+                    "StreamSize_String5": "0.00 Byte (0%)",
+                    "StreamSize_Proportion": "0.00000",
+                    "File_Modified_Date": "UTC 2021-01-31 15:12:31",
+                    "File_Modified_Date_Local": "2021-01-31 15:12:31"
+                },
+                {
+                    "@type": "Image",
+                    "Count": "124",
+                    "StreamCount": "1",
+                    "StreamKind": "Image",
+                    "StreamKind_String": "Image",
+                    "StreamKindID": "0",
+                    "Format": "JPEG",
+                    "Format_String": "JPEG",
+                    "Format_Commercial": "JPEG",
+                    "InternetMediaType": "image/jpeg",
+                    "Width": "461",
+                    "Width_String": "461 pixels",
+                    "Height": "252",
+                    "Height_String": "252 pixels",
+                    "ColorSpace": "YUV",
+                    "ChromaSubsampling": "4:4:4",
+                    "BitDepth": "8",
+                    "BitDepth_String": "8 bits",
+                    "Compression_Mode": "Lossy",
+                    "Compression_Mode_String": "Lossy",
+                    "StreamSize": "11162",
+                    "StreamSize_String": "10.9 KiB (100%)",
+                    "StreamSize_String1": "11 KiB",
+                    "StreamSize_String2": "11 KiB",
+                    "StreamSize_String3": "10.9 KiB",
+                    "StreamSize_String4": "10.90 KiB",
+                    "StreamSize_String5": "10.9 KiB (100%)",
+                    "StreamSize_Proportion": "1.00000"
+                }
+            ]
+        }
+    },
+    {
+        "media": {
+            "@ref": "/ORA4/PRD/REVIEW/ff/85/03/ff85037813a09ea793b4bc2d860324d65184c20f",
+            "track": [{
+                    "@type": "General",
+                    "Count": "331",
+                    "StreamCount": "1",
+                    "StreamKind": "General",
+                    "StreamKind_String": "General",
+                    "StreamKindID": "0",
+                    "ImageCount": "1",
+                    "Image_Format_List": "JPEG",
+                    "Image_Format_WithHint_List": "JPEG",
+                    "Image_Codec_List": "JPEG",
+                    "CompleteName": "./window_two.jpg",
+                    "FolderName": ".",
+                    "FileNameExtension": "window_two.jpg",
+                    "FileName": "window_two",
+                    "FileExtension": "jpg",
+                    "Format": "JPEG",
+                    "Format_String": "JPEG",
+                    "Format_Extensions": "h3d jpeg jpg jpe jps mpo",
+                    "Format_Commercial": "JPEG",
+                    "InternetMediaType": "image/jpeg",
+                    "FileSize": "9535",
+                    "FileSize_String": "9.31 KiB",
+                    "FileSize_String1": "9 KiB",
+                    "FileSize_String2": "9.3 KiB",
+                    "FileSize_String3": "9.31 KiB",
+                    "FileSize_String4": "9.312 KiB",
+                    "StreamSize": "0",
+                    "StreamSize_String": "0.00 Byte (0%)",
+                    "StreamSize_String1": " Byte0",
+                    "StreamSize_String2": "0.0 Byte",
+                    "StreamSize_String3": "0.00 Byte",
+                    "StreamSize_String4": "0.000 Byte",
+                    "StreamSize_String5": "0.00 Byte (0%)",
+                    "StreamSize_Proportion": "0.00000",
+                    "File_Modified_Date": "UTC 2021-01-31 15:13:09",
+                    "File_Modified_Date_Local": "2021-01-31 15:13:09"
+                },
+                {
+                    "@type": "Image",
+                    "Count": "124",
+                    "StreamCount": "1",
+                    "StreamKind": "Image",
+                    "StreamKind_String": "Image",
+                    "StreamKindID": "0",
+                    "Format": "JPEG",
+                    "Format_String": "JPEG",
+                    "Format_Commercial": "JPEG",
+                    "InternetMediaType": "image/jpeg",
+                    "Width": "461",
+                    "Width_String": "461 pixels",
+                    "Height": "252",
+                    "Height_String": "252 pixels",
+                    "ColorSpace": "YUV",
+                    "ChromaSubsampling": "4:4:4",
+                    "BitDepth": "8",
+                    "BitDepth_String": "8 bits",
+                    "Compression_Mode": "Lossy",
+                    "Compression_Mode_String": "Lossy",
+                    "StreamSize": "9535",
+                    "StreamSize_String": "9.31 KiB (100%)",
+                    "StreamSize_String1": "9 KiB",
+                    "StreamSize_String2": "9.3 KiB",
+                    "StreamSize_String3": "9.31 KiB",
+                    "StreamSize_String4": "9.312 KiB",
+                    "StreamSize_String5": "9.31 KiB (100%)",
+                    "StreamSize_Proportion": "1.00000"
+                }
+            ]
+        }
+    }
+]
+```
+
 ### Key list
 
 This file contains the superficial keys. Please specify one key name per line.
