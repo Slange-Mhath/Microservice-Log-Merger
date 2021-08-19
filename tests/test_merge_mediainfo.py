@@ -296,9 +296,10 @@ def test_desired_mediainfo_keys(test_ora_log, test_sf_log, test_exif_log,
     for f in merged_mediainfo_with_sf:
         mediainfo_entries = merged_mediainfo_with_sf[f]["mediainfo"]
         for entry in mediainfo_entries:
-            for k in entry.keys():
-                if k != "@type":
-                    assert k in desired_keys
+            for type in entry.keys():
+                for k in entry[type]:
+                    if k != "@type":
+                        assert k in desired_keys
 
 
 def test_merge_mediainfo_without_exif(test_ora_log, test_sf_log, test_exif_log,
