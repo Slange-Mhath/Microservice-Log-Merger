@@ -117,12 +117,12 @@ def test_occurrence_of_keys():
     return occurence_of_keys
 
 
-def test_merge_exif_to_base_log(test_occurrence_of_keys, test_ora_log, test_sf_log, test_exif_log,
-                                test_key_list_file):
+def test_merge_exif_to_base_log(test_ora_log, test_sf_log, test_exif_log,
+                                test_key_list_file, test_occurrence_of_keys):
     merged_sf_log = merge_sf_logs(load_json(test_ora_log), test_sf_log,
                                   "filename")
-    merged_logs_with_exif = merge_exif_to_base_log(test_occurrence_of_keys, test_exif_log, merged_sf_log,
-                                                   test_key_list_file,
+    merged_logs_with_exif = merge_exif_to_base_log(test_exif_log, merged_sf_log,
+                                                   test_key_list_file, test_occurrence_of_keys,
                                                    "SourceFile")
     for f in merged_sf_log:
         assert "exif" in merged_logs_with_exif[f].keys()

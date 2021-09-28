@@ -88,6 +88,4 @@ def logg_keys_with_occurence(f_log, field_keys_in_f_log):
     sorted_field_keys_in_f_log = {k: v for k, v in
                                   sorted(field_keys_in_f_log.items(),
                                          key=lambda item: item[1])}
-    for k, v in sorted_field_keys_in_f_log.items():
-        logging.info(k, v)
-        print(k, v)
+    return sorted_field_keys_in_f_log

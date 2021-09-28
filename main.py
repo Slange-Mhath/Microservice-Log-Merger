@@ -6,8 +6,8 @@ from merge_mediainfo import merge_mediainfo
 import logging
 
 
-def main(occurrence_of_keys, base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
-         mediainfo_log=None, ):
+def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
+         mediainfo_log=None, occurrence_of_keys=None):
     """
     Calls the different functions in order to merge and write the final output
     :param dpms_log_path: takes the path to the file integrity file
@@ -25,10 +25,10 @@ def main(occurrence_of_keys, base_log_path, sf_log, exif_log, f_key_list=None, o
                     "Please provide a file with the keys if you want to merge "
                     "the Exif log.")
                 return
-            merged_log_files = merge_exif_to_base_log(occurrence_of_keys,
+            merged_log_files = merge_exif_to_base_log(
                                                       exif_log,
                                                       merged_log_files,
-                                                      f_key_list,
+                                                      f_key_list, occurrence_of_keys,
                                                       matching_key="SourceFile",
                                                       )
         if mediainfo_log:
