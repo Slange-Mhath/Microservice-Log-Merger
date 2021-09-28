@@ -111,27 +111,32 @@ def test_key_list_file():
     key_list_file = "tests/dummy_logs/key_list.log"
     return key_list_file
 
+@pytest.fixture()
+def test_occurrence_of_keys():
+    occurence_of_keys = True
+    return occurence_of_keys
 
-def test_merge_exif_to_base_log(test_ora_log, test_sf_log, test_exif_log,
+
+def test_merge_exif_to_base_log(test_occurrence_of_keys, test_ora_log, test_sf_log, test_exif_log,
                                 test_key_list_file):
     merged_sf_log = merge_sf_logs(load_json(test_ora_log), test_sf_log,
                                   "filename")
-    merged_logs_with_exif = merge_exif_to_base_log(test_exif_log, merged_sf_log,
+    merged_logs_with_exif = merge_exif_to_base_log(test_occurrence_of_keys, test_exif_log, merged_sf_log,
                                                    test_key_list_file,
                                                    "SourceFile")
     for f in merged_sf_log:
         assert "exif" in merged_logs_with_exif[f].keys()
 
 
-def test_desired_exif_keys(test_ora_log, test_sf_log, test_exif_log,
-                                test_key_list_file):
-    merged_sf_log = merge_sf_logs(load_json(test_ora_log), test_sf_log,
-                                  "filename")
-    desired_keys = read_key_list(test_key_list_file)
-    merged_logs_with_exif = merge_exif_to_base_log(test_exif_log, merged_sf_log,
-                                                   test_key_list_file,
-                                                   "SourceFile")
-    for f in merged_sf_log:
-        exif_keys = merged_logs_with_exif[f]["exif"].keys()
-        for exif_k in exif_keys:
-            assert exif_k in desired_keys
+# def test_desired_exif_keys(test_ora_log, test_sf_log, test_exif_log,
+#                                 test_key_list_file):
+#     merged_sf_log = merge_sf_logs(load_json(test_ora_log), test_sf_log,
+#                                   "filename")
+#     desired_keys = read_key_list(test_key_list_file)
+#     merged_logs_with_exif = merge_exif_to_base_log(test_exif_log, merged_sf_log,
+#                                                    test_key_list_file,
+#                                                    "SourceFile")
+#     for f in merged_sf_log:
+#         exif_keys = merged_logs_with_exif[f]["exif"].keys()
+#         for exif_k in exif_keys:
+#             assert exif_k in desired_keys

@@ -48,8 +48,10 @@ def merge_sf_logs(base_log, enriching_log, matching_key):
     # a anchor point to map the log files which will enrich the enriched output.
     for f in base_log["files"]:
         enriched_base_log[f["file"]["path"]] = f
-    for enriching_output in open(enriching_log, "r"):
-        enriching_json = json.loads(enriching_output)
+    enriching_output = open(enriching_log, "r")
+    # this might create a performance issue?
+    for line in enriching_output:
+        enriching_json = json.loads(line)
         try:
             sf_version = enriching_json["siegfried"]
         except KeyError:
@@ -58,4 +60,5 @@ def merge_sf_logs(base_log, enriching_log, matching_key):
             if f[matching_key] in enriched_base_log:
                 enriched_base_log[f[matching_key]].update(
                     relabel_siegfried_log(f, sf_version))
+    enriching_output.close()
     return enriched_base_log

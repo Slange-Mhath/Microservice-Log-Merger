@@ -1,4 +1,5 @@
 import json
+import logging
 
 
 def load_json(log_path):
@@ -7,8 +8,9 @@ def load_json(log_path):
     :param dpms_log_path: takes the path to the file integrity file
     :return: returns the file as json
     """
-    log = open(log_path, "r")
-    log_json = json.load(log)
+    with open(log_path, "r") as log:
+        log_json = json.load(log)
+        log.close()
     return log_json
 
 
@@ -21,7 +23,8 @@ def replace_none_values(log_dict):
     :return: returns the replaced dict
     """
     if isinstance(log_dict, dict):
-        log_dict = {k: "unknown" if v is None or not str(v) else v for k, v in log_dict.items()}
+        log_dict = {k: "unknown" if v is None or not str(v) else v for k, v in
+                    log_dict.items()}
     return log_dict
 
 
@@ -45,6 +48,7 @@ def read_key_list(key_list_f):
     if key_list_f:
         with open(key_list_f) as f:
             keys = f.read().splitlines()
+            f.close()
         return keys
 
 
@@ -68,3 +72,22 @@ def delete_keys_with_str_seq(log_dict, list_of_keys):
                         key_to_delete = key
                         del log_dict[key_to_delete]
         return log_dict
+
+
+def logg_keys_with_occurence(f_log, field_keys_in_f_log):
+    """
+    :param f_log: log of a file as dict
+    :param field_keys_in_f_log: a dict to store the keys with their occurrence
+    :return:
+    """
+    for key in f_log.keys():
+        if key not in field_keys_in_f_log:
+            field_keys_in_f_log[key] = 1
+        else:
+            field_keys_in_f_log[key] += 1
+    sorted_field_keys_in_f_log = {k: v for k, v in
+                                  sorted(field_keys_in_f_log.items(),
+                                         key=lambda item: item[1])}
+    for k, v in sorted_field_keys_in_f_log.items():
+        logging.info(k, v)
+        print(k, v)

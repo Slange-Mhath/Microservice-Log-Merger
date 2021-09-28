@@ -6,8 +6,8 @@ from merge_mediainfo import merge_mediainfo
 import logging
 
 
-def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
-         mediainfo_log=None):
+def main(occurrence_of_keys, base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
+         mediainfo_log=None, ):
     """
     Calls the different functions in order to merge and write the final output
     :param dpms_log_path: takes the path to the file integrity file
@@ -25,10 +25,12 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
                     "Please provide a file with the keys if you want to merge "
                     "the Exif log.")
                 return
-            merged_log_files = merge_exif_to_base_log(exif_log,
+            merged_log_files = merge_exif_to_base_log(occurrence_of_keys,
+                                                      exif_log,
                                                       merged_log_files,
                                                       f_key_list,
-                                                      matching_key="SourceFile")
+                                                      matching_key="SourceFile",
+                                                      )
         if mediainfo_log:
             if not f_key_list:
                 logging.error(
@@ -37,8 +39,8 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
                 return
             merged_log_files = merge_mediainfo(merged_log_files, mediainfo_log,
                                                f_key_list, matching_key="@ref")
-
     write_merged_f_log(merged_log_files, output_file)
+
 
 
 # TODO: Maybe I want to use a control structure to get rid of the messy if
@@ -63,6 +65,10 @@ if __name__ == "__main__":
     parser.add_argument("-mediainfo_log_path", "--mediainfo_log_path",
                         dest="mediainfo_log_path",
                         help="Path to the mediainfo log file")
+    parser.add_argument("-occurrence_of_keys", "--occurrence_of_keys",
+                        dest="occurrence_of_keys", default=False,
+                        help="Set to true if you want to get information about "
+                             "the occurrence of the keys in the log")
     args = parser.parse_args()
     main(args.base_log_path, args.sf_log_path, args.exif_log_path,
-         args.f_key_list, args.dest_file_path, args.mediainfo_log_path)
+         args.f_key_list, args.dest_file_path, args.mediainfo_log_path, args.occurrence_of_keys)
