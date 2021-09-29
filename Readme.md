@@ -23,6 +23,10 @@ Specify the file path to the file where the merged output should be written to.
 
 The MLM currently supports [Exif](https://github.com/exiftool/exiftool), and [Mediainfo](https://mediaarea.net/en/MediaInfo) as well. To add the Exif tool output to the merged file add the following parameters.  
 
+**-occurrence_of_keys**
+
+To display a statistic which fields and how often they occur in the merged log set this to True (-occurrence_of_keys "True"). Otherwise the default value will be False and thus the statistic not calculated or shown.
+
 **-exif_log_path**  
 Specify the Exif file which should be added as key to the merged log. Please ensure that your file follows the example structure specified [here](#exif-output).
 
