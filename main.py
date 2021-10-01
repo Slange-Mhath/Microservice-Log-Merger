@@ -23,7 +23,6 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
     base_log_json = load_json(base_log_path)
     if sf_log:
         merged_log_files = merge_sf_logs(base_log_json, sf_log, "filename")
-        del sf_log
         if exif_log:
             if not f_key_list:
                 logging.error(
@@ -36,7 +35,6 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
                                                       f_key_list, occurrence_of_keys,
                                                       matching_key="SourceFile",
                                                       )
-            del exif_log
         if mediainfo_log:
             if not f_key_list:
                 logging.error(
@@ -45,7 +43,6 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
                 return
             merged_log_files = merge_mediainfo(merged_log_files, mediainfo_log,
                                                f_key_list, matching_key="@ref")
-            del mediainfo_log
     write_merged_f_log(merged_log_files, output_file)
     t2 = time.process_time()
     print("Memory (After) : {}Mb".format(mem_profile.memory_usage()))
