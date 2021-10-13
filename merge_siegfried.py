@@ -34,9 +34,13 @@ def add_sf_info_to_db(sf_log_path, session, File):
     with open(sf_log_path, "r") as sf_log:
         for line in sf_log:
             sf_file_json = json.loads(line)
+            try:
+                sf_version = sf_file_json["siegfried"]
+            except KeyError:
+                sf_version = "unknown"
             for f in sf_file_json['files']:
                 session.query(File).filter(File.path == f["filename"]).update(
-                    {File.siegfried_file_info: json.dumps(f)},
+                    {File.siegfried_file_info: json.dumps(relabel_siegfried_log(f, sf_version))},
                     synchronize_session=False)
                 session.commit()
 
@@ -44,11 +48,24 @@ def add_sf_info_to_db(sf_log_path, session, File):
 # TODO: Change how the merging works
 
 def merge_sf_logs(session, File):
-    file_paths = session.query(File.path).all()
-    for fp in file_paths:
-        print (fp)
+    enriched_base_log = {}
+    db_files = session.query(File).all()
+    for f in db_files:
+        merged_file = {"timestamp": f.timestamp,
+                       "file": json.loads(f.base_file_info),}
+        merged_file.update(json.loads(f.siegfried_file_info))
+        # TODO: Das hier stimmt nicht!
+        enriched_base_log.update(merged_file)
+        print(enriched_base_log)
+        return enriched_base_log
+        # merged_file_log["files"].append(merged_file)
+        # return merged_file_log
+        # print(merged_file_log)
 
 
+
+#
+#
 # def merge_sf_logs(base_log, enriching_log, matching_key):
 #     """
 #     Uses dict comprehension to create a new dict which adds the siegfried output
