@@ -30,35 +30,55 @@ def relabel_siegfried_log(log, sf_version):
     return sf_output
 
 
-def merge_sf_logs(base_log, enriching_log, matching_key):
-    """
-    Uses dict comprehension to create a new dict which adds the siegfried output
-    at the matching file paths.
-    For every file in siegfried output which is in the comprehended new dict
-    relabel the siegfried output and update it to the now with siegfried output
-    enriched output.
-    :param integrity_log: takes the read integrity log
-    :param sf_log: takes the read siegfried log (sf_log)
-    :param matching_key: is the key which stores the value that maps to the
-    respective file in the base_log
-    :return: returns the now with siegfried output enriched integrity file.
-    """
-    enriched_base_log = {}
-    # uses the file_path to become the parent key of the enriched_output to have
-    # a anchor point to map the log files which will enrich the enriched output.
-    for f in base_log["files"]:
-        enriched_base_log[f["file"]["path"]] = f
-    enriching_output = open(enriching_log, "r")
-    # this might create a performance issue?
-    for line in enriching_output:
-        enriching_json = json.loads(line)
-        try:
-            sf_version = enriching_json["siegfried"]
-        except KeyError:
-            sf_version = "unknown"
-        for f in enriching_json["files"]:
-            if f[matching_key] in enriched_base_log:
-                enriched_base_log[f[matching_key]].update(
-                    relabel_siegfried_log(f, sf_version))
-    enriching_output.close()
-    return enriched_base_log
+def add_sf_info_to_db(sf_log_path, session, File):
+    with open(sf_log_path, "r") as sf_log:
+        for line in sf_log:
+            sf_file_json = json.loads(line)
+            for f in sf_file_json['files']:
+                session.query(File).filter(File.path == f["filename"]).update(
+                    {File.siegfried_file_info: json.dumps(f)},
+                    synchronize_session=False)
+                session.commit()
+
+
+# TODO: Change how the merging works
+
+def merge_sf_logs(session, File):
+    file_paths = session.query(File.path).all()
+    for fp in file_paths:
+        print (fp)
+
+
+# def merge_sf_logs(base_log, enriching_log, matching_key):
+#     """
+#     Uses dict comprehension to create a new dict which adds the siegfried output
+#     at the matching file paths.
+#     For every file in siegfried output which is in the comprehended new dict
+#     relabel the siegfried output and update it to the now with siegfried output
+#     enriched output.
+#     :param integrity_log: takes the read integrity log
+#     :param sf_log: takes the read siegfried log (sf_log)
+#     :param matching_key: is the key which stores the value that maps to the
+#     respective file in the base_log
+#     :return: returns the now with siegfried output enriched integrity file.
+#     """
+#     enriched_base_log = {}
+#     # uses the file_path to become the parent key of the enriched_output to have
+#     # a anchor point to map the log files which will enrich the enriched output.
+#     for f in base_log["files"]:
+#         enriched_base_log[f["file"]["path"]] = f
+#     enriching_output = open(enriching_log, "r")
+#     # this might create a performance issue?
+#     for line in enriching_output:
+#         enriching_json = json.loads(line)
+#         try:
+#             sf_version = enriching_json["siegfried"]
+#         except KeyError:
+#             sf_version = "unknown"
+#         for f in enriching_json["files"]:
+#             if f[matching_key] in enriched_base_log:
+#                 enriched_base_log[f[matching_key]].update(
+#                     relabel_siegfried_log(f, sf_version))
+#     enriching_output.close()
+#     return enriched_base_log
+

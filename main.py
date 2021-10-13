@@ -1,9 +1,33 @@
 from argparse import ArgumentParser
-from helper import load_json, write_merged_f_log
-from merge_siegfried import merge_sf_logs
-from merge_exif import merge_exif_to_base_log
-from merge_mediainfo import merge_mediainfo
+from helper import load_json, write_merged_f_log, add_ora_info_to_db
+from merge_siegfried import merge_sf_logs, add_sf_info_to_db
+from merge_exif import merge_exif_to_base_log, add_exif_info_to_db
+from merge_mediainfo import merge_mediainfo, add_mediainfo_info_to_db
+
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, update
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, relationship
 import logging
+
+Base = declarative_base()
+
+
+class File(Base):
+    __tablename__ = "file"
+    path = Column("path", String, primary_key=True)
+    timestamp = Column("timestamp", String)
+    base_file_info = Column("base_file_info", String)
+    siegfried_file_info = Column("siegfried_file_info", String)
+    exif_file_info = Column("exif_file_info", String)
+    mediainfo_file_info = Column("mediainfo_file_info", String)
+
+
+# engine = create_engine("sqlite:///mlm.db", )
+engine = create_engine("sqlite:///:memory:",)
+Base.metadata.create_all(bind=engine)
+Session = sessionmaker(bind=engine)
+session = Session()
+file = File()
 
 
 def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
@@ -17,9 +41,13 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
     """
     merged_log_files = {}
     base_log_json = load_json(base_log_path)
+    add_ora_info_to_db(base_log_json, session, File)
+
     if sf_log:
-        merged_log_files = merge_sf_logs(base_log_json, sf_log, "filename")
+        add_sf_info_to_db(sf_log, session, File)
+        merged_log_files = merge_sf_logs(session, File)
         if exif_log:
+            add_exif_info_to_db(exif_log, session, File)
             if not f_key_list:
                 logging.error(
                     "Please provide a file with the keys if you want to merge "
@@ -32,6 +60,7 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
                                                       matching_key="SourceFile",
                                                       )
         if mediainfo_log:
+            add_mediainfo_info_to_db(mediainfo_log, session, File)
             if not f_key_list:
                 logging.error(
                     "Please provide a file with the keys if you want to merge "
@@ -42,10 +71,8 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
     write_merged_f_log(merged_log_files, output_file)
 
 
-
 # TODO: Maybe I want to use a control structure to get rid of the messy if
 #  clauses
-
 if __name__ == "__main__":
     parser = ArgumentParser(description="...")
     parser.add_argument("-base_log_path", metavar="base_log_path",

@@ -3,6 +3,16 @@ from helper import replace_none_values, read_key_list
 import logging
 
 
+def add_mediainfo_info_to_db(mediainfo_log_path, session, File):
+    with open(mediainfo_log_path, "r") as mediainfo_log:
+        mediainfo_json = json.load(mediainfo_log)
+        mediainfo_log.close()
+        for f in mediainfo_json:
+            session.query(File).filter(File.path == f["media"]["@ref"]).update(
+                {File.mediainfo_file_info: json.dumps(f)}, synchronize_session=False)
+            session.commit()
+
+
 def merge_mediainfo(base_log, mediainfo_log, f_key_list, matching_key):
     field_keys = read_key_list(f_key_list)
     if "@type" not in field_keys:

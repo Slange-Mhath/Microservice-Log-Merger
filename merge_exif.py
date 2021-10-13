@@ -3,6 +3,16 @@ import json
 import logging
 
 
+def add_exif_info_to_db(exif_log_path, session, File):
+    with open(exif_log_path, "r") as exif_log:
+        exif_json = json.load(exif_log)
+        exif_log.close()
+        for f in exif_json:
+            session.query(File).filter(File.path == f["SourceFile"]).update(
+                {File.exif_file_info: json.dumps(f)}, synchronize_session=False)
+            session.commit()
+
+
 def merge_exif_to_base_log(exif_log, base_log, f_key_list, occurrence_of_keys, matching_key):
     field_keys = read_key_list(f_key_list)
     enriched_base_log = base_log
