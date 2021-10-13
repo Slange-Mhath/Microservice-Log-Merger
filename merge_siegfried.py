@@ -54,10 +54,11 @@ def merge_sf_logs(session, File):
         merged_file = {"timestamp": f.timestamp,
                        "file": json.loads(f.base_file_info),}
         merged_file.update(json.loads(f.siegfried_file_info))
-        # TODO: Das hier stimmt nicht!
+        # TODO: thats not working it shouldnt replace the entry but add it
         enriched_base_log.update(merged_file)
-        print(enriched_base_log)
-        return enriched_base_log
+        print(f)
+    print(enriched_base_log)
+    return enriched_base_log
         # merged_file_log["files"].append(merged_file)
         # return merged_file_log
         # print(merged_file_log)
