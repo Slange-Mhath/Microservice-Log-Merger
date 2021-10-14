@@ -51,17 +51,11 @@ def merge_sf_logs(session, File):
     enriched_base_log = {}
     db_files = session.query(File).all()
     for f in db_files:
-        merged_file = {"timestamp": f.timestamp,
-                       "file": json.loads(f.base_file_info),}
-        merged_file.update(json.loads(f.siegfried_file_info))
-        # TODO: thats not working it shouldnt replace the entry but add it
-        enriched_base_log.update(merged_file)
-        print(f)
-    print(enriched_base_log)
+        enriched_base_log[f.path] = {"timestamp": f.timestamp,
+                    "file": json.loads(f.base_file_info),}
+        if f.siegfried_file_info is not None:
+            enriched_base_log[f.path].update(json.loads(f.siegfried_file_info))
     return enriched_base_log
-        # merged_file_log["files"].append(merged_file)
-        # return merged_file_log
-        # print(merged_file_log)
 
 
 
