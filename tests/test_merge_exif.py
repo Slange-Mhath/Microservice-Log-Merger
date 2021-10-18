@@ -171,14 +171,13 @@ def test_add_sf_info_into_db(test_sf_log, test_session, test_db_file):
     add_sf_info_to_db(test_sf_log, test_session, test_db_file)
 
 
-def test_add_exif_info_into_db(test_exif_log, test_session, test_db_file):
-    add_exif_info_to_db(test_exif_log, test_session, test_db_file)
+def test_add_exif_info_into_db(test_exif_log, test_session, test_db_file, test_key_list_file):
+    add_exif_info_to_db(test_exif_log, test_session, test_db_file, test_key_list_file)
 
 
-def test_merge_exif_logs(test_key_list_file, test_occurrence_of_keys, test_session, test_db_file):
+def test_merge_exif_logs(test_occurrence_of_keys, test_session, test_db_file):
     merged_sf_logs = merge_sf_logs(test_session, test_db_file)
-    merged_logs_with_exif = merge_exif_to_base_log(test_key_list_file, test_occurrence_of_keys, test_session, test_db_file)
-    print(merged_logs_with_exif)
+    merged_logs_with_exif = merge_exif_to_base_log(test_occurrence_of_keys, test_session, test_db_file)
 
 
 # def test_desired_exif_keys(test_ora_log, test_sf_log, test_exif_log,

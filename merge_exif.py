@@ -3,20 +3,34 @@ import json
 import logging
 
 
-def add_exif_info_to_db(exif_log_path, session, File):
+def add_exif_info_to_db(exif_log_path, session, File, f_key_list, occurrence_of_keys):
+    field_keys = read_key_list(f_key_list)
+    field_keys_in_f_log = {}
     with open(exif_log_path, "r") as exif_log:
         exif_json = json.load(exif_log)
         exif_log.close()
         for f in exif_json:
+            if occurrence_of_keys:
+                sorted_field_keys_in_f_log = logg_keys_with_occurence(f,
+                                                                      field_keys_in_f_log)
+                for k, v in sorted_field_keys_in_f_log.items():
+                    logging.info(k, v)
+                    print(k, v)
             session.query(File).filter(File.path == f["SourceFile"]).update(
-                {File.exif_file_info: json.dumps(f)}, synchronize_session=False)
+                {File.exif_file_info: json.dumps(create_enriching_exif(f, field_keys))}, synchronize_session=False)
             session.commit()
 
 
-def merge_exif_to_base_log(f_key_list, occurrence_of_keys, session, File):
+# # TODO: This is the desperate try to implement the replace non values func which is a big problem cause it causes errors with the try and error and I dont get why
+# def slim_exif(session, File):
+#     db_files = session.query(File).all()
+#     for f in db_files:
+#         exif = {"exif": f.exif_file_info}
+#         print(exif)
+
+
+def merge_exif_to_base_log(session, File):
     enriched_base_log = {}
-    field_keys = read_key_list(f_key_list)
-    field_keys_in_f_log = {}
     db_files = session.query(File).all()
     for f in db_files:
         enriched_base_log[f.path] = {"timestamp": f.timestamp,
@@ -33,20 +47,12 @@ def merge_exif_to_base_log(f_key_list, occurrence_of_keys, session, File):
     # siegfried either. But we could also run the functions in the iteration
     # which returns the exif info for the respective file. Would probably most
     # efficient cause then we wont need to run those functions for all those
-    # files we dont want
-    print(enriched_base_log)
+    # files we dont want.
+    # On the other hand if we wont store it in the db in the format we desire
+    # we cant call that like we call the siegfried file info here or we would
+    # have to run that again and again as soon as we want to have exif in
+    # another merged log e.g. if we start with mediainfo
     return enriched_base_log
-    #             # start adding the fieldkeys which are in the merged dicts here
-    #             if occurrence_of_keys:
-    #                 sorted_field_keys_in_f_log = logg_keys_with_occurence(f, field_keys_in_f_log)
-    #             enriching_exif = create_enriching_exif(f, field_keys)
-    #             enriched_base_log[f[matching_key]].update(
-    #                 {"exif": replace_none_values(enriching_exif)})
-    # if occurrence_of_keys:
-    #     for k, v in sorted_field_keys_in_f_log.items():
-    #         logging.info(k, v)
-    #         print(k, v)
-    # return enriched_base_log
 
 
 def create_enriching_exif(exif_dict, field_keys):
