@@ -8,6 +8,8 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, updat
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 import logging
+import memory_profiler as mem_profile
+import time
 
 Base = declarative_base()
 
@@ -39,6 +41,8 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
     :param output_file: takes an optional user specified output file
     :return:
     """
+    print("Memory (Before): {}Mb".format(mem_profile.memory_usage()))
+    t1 = time.process_time()
     merged_log_files = {}
     base_log_json = load_json(base_log_path)
     add_ora_info_to_db(base_log_json, session, File)
@@ -61,9 +65,11 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
                     "Please provide a file with the keys if you want to merge "
                     "the Mediainfo log.")
                 return
-            merged_log_files = merge_mediainfo(merged_log_files, mediainfo_log,
-                                               f_key_list, matching_key="@ref")
+            merged_log_files = merge_mediainfo(f_key_list, session, File)
     write_merged_f_log(merged_log_files, output_file)
+    t2 = time.process_time()
+    print("Memory (After): {}Mb".format(mem_profile.memory_usage()))
+    print("Took {} Seconds".format(t2-t1))
 
 
 # TODO: Maybe I want to use a control structure to get rid of the messy if
