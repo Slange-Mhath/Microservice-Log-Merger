@@ -42,31 +42,34 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
     :return:
     """
     print("Memory (Before): {}Mb".format(mem_profile.memory_usage()))
+    # TODO: Change the merge functions so that we wont need to execute every
+    #  merge function per logfile but only one in main.py For this purpose it
+    #  would be good to not iterate over every file in the whole DB everytime
+    #  but to use the PK file_path to call the needed file info
     t1 = time.process_time()
-    merged_log_files = {}
+    # merged_log_files = {}
     base_log_json = load_json(base_log_path)
     add_ora_info_to_db(base_log_json, session, File)
-
     if sf_log:
         add_sf_info_to_db(sf_log, session, File)
-        merged_log_files = merge_sf_logs(session, File)
-        if exif_log:
-            add_exif_info_to_db(exif_log, session, File, f_key_list, occurrence_of_keys)
-            if not f_key_list:
-                logging.error(
-                    "Please provide a file with the keys if you want to merge "
-                    "the Exif log.")
-                return
-            merged_log_files = merge_exif_to_base_log(session, File)
-        if mediainfo_log:
-            add_mediainfo_info_to_db(mediainfo_log, session, File)
-            if not f_key_list:
-                logging.error(
-                    "Please provide a file with the keys if you want to merge "
-                    "the Mediainfo log.")
-                return
-            merged_log_files = merge_mediainfo(f_key_list, session, File)
-    write_merged_f_log(merged_log_files, output_file)
+        # merged_log_files = merge_sf_logs(session, File)
+    if exif_log:
+        add_exif_info_to_db(exif_log, session, File, f_key_list, occurrence_of_keys)
+        if not f_key_list:
+            logging.error(
+                "Please provide a file with the keys if you want to merge "
+                "the Exif log.")
+            return
+            # merged_log_files = merge_exif_to_base_log(session, File)
+    if mediainfo_log:
+        add_mediainfo_info_to_db(mediainfo_log, session, File)
+        if not f_key_list:
+            logging.error(
+                "Please provide a file with the keys if you want to merge "
+                "the Mediainfo log.")
+            return
+            # merged_log_files = merge_mediainfo(f_key_list, session, File)
+    # write_merged_f_log(merged_log_files, output_file)
     t2 = time.process_time()
     print("Memory (After): {}Mb".format(mem_profile.memory_usage()))
     print("Took {} Seconds".format(t2-t1))

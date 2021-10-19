@@ -37,16 +37,20 @@ def replace_none_values(log_dict):
     return log_dict
 
 
-def write_merged_f_log(merged_log, dest_file):
-    """
-    Writes the merged and enriched integrity file to a specified output file.
-    :param merged_log: takes the merged and enriched file
-    :param dest_file: takes the output file
-    """
-    output = open(dest_file, "w", encoding="utf-8")
-    for f in merged_log.values():
-        json.dump(f, output, sort_keys=True, ensure_ascii=True)
-        output.write("\n")
+# def write_merged_f_log(merged_log, dest_file):
+#     """
+#     Writes the merged and enriched integrity file to a specified output file.
+#     :param merged_log: takes the merged and enriched file
+#     :param dest_file: takes the output file
+#     """
+#     output = open(dest_file, "w", encoding="utf-8")
+#     for f in merged_log.values():
+#         json.dump(f, output, sort_keys=True, ensure_ascii=True)
+#         output.write("\n")
+
+
+def write_merged_f_log(session, File, output_file):
+    ...
 
 
 def read_key_list(key_list_f):
