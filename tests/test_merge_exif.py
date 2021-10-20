@@ -1,7 +1,7 @@
 import pytest
-from merge_exif import merge_exif_to_base_log, add_exif_info_to_db
+from merge_exif import add_exif_info_to_db
 from helper import load_json, read_key_list
-from merge_siegfried import merge_sf_logs, add_sf_info_to_db
+from merge_siegfried import add_sf_info_to_db
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, update
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
@@ -171,8 +171,8 @@ def test_add_sf_info_into_db(test_sf_log, test_session, test_db_file):
     add_sf_info_to_db(test_sf_log, test_session, test_db_file)
 
 
-def test_add_exif_info_into_db(test_exif_log, test_session, test_db_file, test_key_list_file):
-    add_exif_info_to_db(test_exif_log, test_session, test_db_file, test_key_list_file)
+def test_add_exif_info_into_db(test_exif_log, test_session, test_db_file, test_key_list_file, test_occurrence_of_keys):
+    add_exif_info_to_db(test_exif_log, test_session, test_db_file, test_key_list_file, test_occurrence_of_keys)
 
 
 def test_merge_exif_logs(test_occurrence_of_keys, test_session, test_db_file):

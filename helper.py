@@ -1,4 +1,5 @@
 import json
+from merge_mediainfo import get_selected_mediainfo
 
 
 def add_ora_info_to_db(ora_log, session, File):
@@ -23,20 +24,6 @@ def load_json(log_path):
     return log_json
 
 
-def replace_none_values(log_dict):
-    """
-    Replaces 'None' values from a dict with 'unknown' String to make it easier
-    to search for it etc.
-    :param log_dict: takes the dict where the values should be replaced. (In our
-    case thats the Siegfried output part)
-    :return: returns the replaced dict
-    """
-    if isinstance(log_dict, dict):
-        log_dict = {k: "unknown" if v is None or not str(v) else v for k, v in
-                    log_dict.items()}
-    return log_dict
-
-
 # def write_merged_f_log(merged_log, dest_file):
 #     """
 #     Writes the merged and enriched integrity file to a specified output file.
@@ -48,9 +35,30 @@ def replace_none_values(log_dict):
 #         json.dump(f, output, sort_keys=True, ensure_ascii=True)
 #         output.write("\n")
 
+# TODO: The log is not displayed correct which might be a hint that some functions are executed unintentionally or more than expected.
 
-def write_merged_f_log(session, File, output_file):
-    ...
+def write_merged_f_log(session, File, output_file, f_key_list):
+    field_keys = read_key_list(f_key_list)
+    merged_output = {}
+    db_files = session.query(File).all()
+    for f in db_files:
+        merged_output[f.path] = {"timestamp": f.timestamp,
+                                 "file": json.loads(f.base_file_info), }
+        if f.siegfried_file_info is not None:
+            merged_output[f.path].update(json.loads(f.siegfried_file_info))
+        if f.exif_file_info is not None:
+            merged_output[f.path].update(
+                {"exif": json.loads(f.exif_file_info)})
+        if f.mediainfo_file_info is not None:
+            mediainfo_file_info_dict = json.loads(f.mediainfo_file_info)
+            merged_output[f.path].update({
+                "mediainfo": get_selected_mediainfo(
+                    field_keys,
+                    mediainfo_file_info_dict)})
+    output = open(output_file, "w", encoding="utf-8")
+    for f in merged_output.values():
+        json.dump(f, output, sort_keys=True, ensure_ascii=True)
+        output.write("\n")
 
 
 def read_key_list(key_list_f):

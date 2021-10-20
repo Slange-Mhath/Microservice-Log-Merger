@@ -1,5 +1,5 @@
 import pytest
-from merge_siegfried import relabel_siegfried_log, merge_sf_logs, add_sf_info_to_db
+from merge_siegfried import relabel_siegfried_log, add_sf_info_to_db
 from helper import load_json
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, update
 from sqlalchemy.ext.declarative import declarative_base

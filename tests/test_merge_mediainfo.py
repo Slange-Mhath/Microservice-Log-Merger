@@ -1,8 +1,43 @@
-from merge_mediainfo import merge_mediainfo
+from merge_mediainfo import add_mediainfo_info_to_db
 import pytest
-from merge_exif import merge_exif_to_base_log
-from helper import load_json, read_key_list
-from merge_siegfried import merge_sf_logs
+from merge_exif import add_exif_info_to_db
+from helper import load_json, read_key_list, add_ora_info_to_db
+from merge_siegfried import add_sf_info_to_db
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, update
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, relationship
+from main import File, add_ora_info_to_db
+
+
+Base = declarative_base()
+
+
+class File(Base):
+    __tablename__ = "file"
+    path = Column("path", String, primary_key=True)
+    timestamp = Column("timestamp", String)
+    base_file_info = Column("base_file_info", String)
+    siegfried_file_info = Column("siegfried_file_info", String)
+    exif_file_info = Column("exif_file_info", String)
+    mediainfo_file_info = Column("mediainfo_file_info", String)
+
+
+# engine = create_engine("sqlite:///mlm.db", )
+engine = create_engine("sqlite:///:memory:",)
+Base.metadata.create_all(bind=engine)
+Session = sessionmaker(bind=engine)
+session = Session()
+file = File()
+
+
+@pytest.fixture()
+def test_db_file():
+    return File
+
+
+@pytest.fixture()
+def test_session():
+    return session
 
 
 @pytest.fixture()
@@ -47,6 +82,12 @@ def dict_with_none_value():
 def test_key_list_file():
     key_list_file = "tests/dummy_logs/key_list.log"
     return key_list_file
+
+
+@pytest.fixture()
+def test_occurrence_of_keys():
+    occurence_of_keys = True
+    return occurence_of_keys
 
 
 @pytest.fixture()
@@ -264,52 +305,75 @@ def test_exif_dict():
     return example_log
 
 
-def test_merge_mediainfo(test_ora_log, test_sf_log, test_exif_log,
-                         test_mediainfo_mult_f, test_key_list_file):
-    merged_sf_log = merge_sf_logs(load_json(test_ora_log), test_sf_log,
-                                  "filename")
-
-    merged_logs_with_exif = merge_exif_to_base_log(test_exif_log, merged_sf_log,
-                                                   test_key_list_file,
-                                                   "SourceFile")
-
-    merged_mediainfo_with_sf = merge_mediainfo(merged_logs_with_exif,
-                                               test_mediainfo_mult_f,
-                                               test_key_list_file, "@ref")
-    for f in merged_sf_log:
-        assert "mediainfo" in merged_mediainfo_with_sf[f].keys()
+def test_add_ora_info_into_db(test_ora_log, test_session, test_db_file):
+    base_log_json = load_json(test_ora_log)
+    add_ora_info_to_db(base_log_json, test_session, test_db_file)
 
 
-def test_desired_mediainfo_keys(test_ora_log, test_sf_log, test_exif_log,
-                                test_mediainfo_mult_f, test_key_list_file):
-    merged_sf_log = merge_sf_logs(load_json(test_ora_log), test_sf_log,
-                                  "filename")
-
-    merged_logs_with_exif = merge_exif_to_base_log(test_exif_log, merged_sf_log,
-                                                   test_key_list_file,
-                                                   "SourceFile")
-
-    merged_mediainfo_with_sf = merge_mediainfo(merged_logs_with_exif,
-                                               test_mediainfo_mult_f,
-                                               test_key_list_file, "@ref")
-    desired_keys = read_key_list(test_key_list_file)
-    for f in merged_mediainfo_with_sf:
-        mediainfo_entries = merged_mediainfo_with_sf[f]["mediainfo"]
-        for entry in mediainfo_entries:
-            for type in entry.keys():
-                for k in entry[type]:
-                    if k != "@type":
-                        assert k in desired_keys
+def test_add_sf_info_into_db(test_sf_log, test_session, test_db_file):
+    add_sf_info_to_db(test_sf_log, test_session, test_db_file)
 
 
-def test_merge_mediainfo_without_exif(test_ora_log, test_sf_log, test_exif_log,
-                                      test_mediainfo_mult_f,
-                                      test_key_list_file):
-    merged_sf_log = merge_sf_logs(load_json(test_ora_log), test_sf_log,
-                                  "filename")
+def test_add_exif_info_into_db(test_exif_log, test_session, test_db_file, test_key_list_file, test_occurrence_of_keys):
+    add_exif_info_to_db(test_exif_log, test_session, test_db_file, test_key_list_file, test_occurrence_of_keys)
 
-    merged_mediainfo_with_sf = merge_mediainfo(merged_sf_log,
-                                               test_mediainfo_mult_f,
-                                               test_key_list_file, "@ref")
-    for f in merged_sf_log:
-        assert "mediainfo" in merged_mediainfo_with_sf[f].keys()
+
+def test_add_mediainfo_info_to_db(test_mediainfo_mult_f, test_session, test_db_file):
+    add_mediainfo_info_to_db(test_mediainfo_mult_f, test_session, test_db_file)
+
+
+def test_merge_mediainfo(test_occurrence_of_keys, test_key_list_file, test_session, test_db_file):
+    merged_sf_logs = merge_sf_logs(test_session, test_db_file)
+    merged_logs_with_exif = merge_exif_to_base_log(test_session, test_db_file)
+    merged_logs_with_mediainfo = merge_mediainfo(test_key_list_file, test_session, test_db_file)
+
+
+# def test_merge_mediainfo(test_ora_log, test_sf_log, test_exif_log,
+#                          test_mediainfo_mult_f, test_key_list_file):
+#     merged_sf_log = merge_sf_logs(load_json(test_ora_log), test_sf_log,
+#                                   "filename")
+#
+#     merged_logs_with_exif = merge_exif_to_base_log(test_exif_log, merged_sf_log,
+#                                                    test_key_list_file,
+#                                                    "SourceFile")
+#
+#     merged_mediainfo_with_sf = merge_mediainfo(merged_logs_with_exif,
+#                                                test_mediainfo_mult_f,
+#                                                test_key_list_file, "@ref")
+#     for f in merged_sf_log:
+#         assert "mediainfo" in merged_mediainfo_with_sf[f].keys()
+#
+#
+# def test_desired_mediainfo_keys(test_ora_log, test_sf_log, test_exif_log,
+#                                 test_mediainfo_mult_f, test_key_list_file):
+#     merged_sf_log = merge_sf_logs(load_json(test_ora_log), test_sf_log,
+#                                   "filename")
+#
+#     merged_logs_with_exif = merge_exif_to_base_log(test_exif_log, merged_sf_log,
+#                                                    test_key_list_file,
+#                                                    "SourceFile")
+#
+#     merged_mediainfo_with_sf = merge_mediainfo(merged_logs_with_exif,
+#                                                test_mediainfo_mult_f,
+#                                                test_key_list_file, "@ref")
+#     desired_keys = read_key_list(test_key_list_file)
+#     for f in merged_mediainfo_with_sf:
+#         mediainfo_entries = merged_mediainfo_with_sf[f]["mediainfo"]
+#         for entry in mediainfo_entries:
+#             for type in entry.keys():
+#                 for k in entry[type]:
+#                     if k != "@type":
+#                         assert k in desired_keys
+#
+#
+# def test_merge_mediainfo_without_exif(test_ora_log, test_sf_log, test_exif_log,
+#                                       test_mediainfo_mult_f,
+#                                       test_key_list_file):
+#     merged_sf_log = merge_sf_logs(load_json(test_ora_log), test_sf_log,
+#                                   "filename")
+#
+#     merged_mediainfo_with_sf = merge_mediainfo(merged_sf_log,
+#                                                test_mediainfo_mult_f,
+#                                                test_key_list_file, "@ref")
+#     for f in merged_sf_log:
+#         assert "mediainfo" in merged_mediainfo_with_sf[f].keys()

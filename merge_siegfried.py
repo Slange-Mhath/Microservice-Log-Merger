@@ -1,5 +1,5 @@
 import logging
-from helper import replace_none_values
+from merge_mediainfo import replace_none_values
 import json
 
 
@@ -47,15 +47,15 @@ def add_sf_info_to_db(sf_log_path, session, File):
 
 # TODO: Change how the merging works
 
-def merge_sf_logs(session, File):
-    enriched_base_log = {}
-    db_files = session.query(File).all()
-    for f in db_files:
-        enriched_base_log[f.path] = {"timestamp": f.timestamp,
-                    "file": json.loads(f.base_file_info),}
-        if f.siegfried_file_info is not None:
-            enriched_base_log[f.path].update(json.loads(f.siegfried_file_info))
-    return enriched_base_log
+# def merge_sf_logs(session, File):
+#     enriched_base_log = {}
+#     db_files = session.query(File).all()
+#     for f in db_files:
+#         enriched_base_log[f.path] = {"timestamp": f.timestamp,
+#                     "file": json.loads(f.base_file_info),}
+#         if f.siegfried_file_info is not None:
+#             enriched_base_log[f.path].update(json.loads(f.siegfried_file_info))
+#     return enriched_base_log
 
 
 
