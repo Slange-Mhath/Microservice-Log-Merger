@@ -24,19 +24,6 @@ def load_json(log_path):
     return log_json
 
 
-# def write_merged_f_log(merged_log, dest_file):
-#     """
-#     Writes the merged and enriched integrity file to a specified output file.
-#     :param merged_log: takes the merged and enriched file
-#     :param dest_file: takes the output file
-#     """
-#     output = open(dest_file, "w", encoding="utf-8")
-#     for f in merged_log.values():
-#         json.dump(f, output, sort_keys=True, ensure_ascii=True)
-#         output.write("\n")
-
-# TODO: The log is not displayed correct which might be a hint that some functions are executed unintentionally or more than expected.
-
 def write_merged_f_log(session, File, output_file, f_key_list):
     field_keys = read_key_list(f_key_list)
     merged_output = {}

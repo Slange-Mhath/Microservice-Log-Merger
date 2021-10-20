@@ -12,26 +12,6 @@ def add_mediainfo_info_to_db(mediainfo_log_path, session, File):
             session.commit()
 
 
-# def merge_mediainfo(f_key_list, session, File):
-#     field_keys = read_key_list(f_key_list)
-#     if "@type" not in field_keys:
-#         field_keys.append("@type")
-#     enriched_base_log = {}
-#     db_files = session.query(File).all()
-#     for f in db_files:
-#         enriched_base_log[f.path] = {"timestamp": f.timestamp,
-#                                      "file": json.loads(f.base_file_info)}
-#         if f.siegfried_file_info is not None:
-#             enriched_base_log[f.path].update(
-#                 json.loads(f.siegfried_file_info))
-#         if f.exif_file_info is not None:
-#             enriched_base_log[f.path].update(
-#                 {"exif": json.loads(f.exif_file_info)})
-#         if f.mediainfo_file_info is not None:
-#             mediainfo_file_info_dict = json.loads(f.mediainfo_file_info)
-#             # print(type(mediainfo_file_info_dict))
-#             enriched_base_log[f.path].update({"mediainfo": get_selected_mediainfo(field_keys, mediainfo_file_info_dict)})
-#     return enriched_base_log
 def replace_none_values(log_dict):
     """
     Replaces 'None' values from a dict with 'unknown' String to make it easier
