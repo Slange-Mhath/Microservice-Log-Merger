@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from helper import load_json, write_merged_f_log
+from helper import load_base_log_json, write_merged_f_log
 from merge_siegfried import merge_sf_logs
 from merge_exif import merge_exif_to_base_log
 from merge_mediainfo import merge_mediainfo

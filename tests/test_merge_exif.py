@@ -1,6 +1,6 @@
 import pytest
 from merge_exif import merge_exif_to_base_log
-from helper import load_json, read_key_list
+from helper import load_base_log_json, read_key_list
 from merge_siegfried import merge_sf_logs
 
 

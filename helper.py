@@ -1,17 +1,20 @@
-import json
+import ijson
 import logging
 
 
-def load_json(log_path):
+def load_base_log_json(log_path):
     """
     Reads the file integrity file
     :param dpms_log_path: takes the path to the file integrity file
     :return: returns the file as json
     """
-    with open(log_path, "r") as log:
-        log_json = json.load(log)
-        log.close()
-    return log_json
+    f = open(log_path, "rb")
+    objects = ijson.items(f, 'files.item.file')
+    files = (o for o in objects)
+    base_log = {}
+    for file in files:
+        base_log[file["path"]] = file
+    print(base_log)
 
 
 def replace_none_values(log_dict):

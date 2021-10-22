@@ -1,5 +1,5 @@
 import pytest
-from helper import load_json, replace_none_values, read_key_list
+from helper import load_base_log_json, replace_none_values, read_key_list
 
 
 @pytest.fixture()
@@ -96,21 +96,21 @@ def test_log():
     return example_log
 
 
-def test_load_json(test_file):
-    file_data = load_json(test_file)
-    assert isinstance(file_data, dict)
+def test_load_base_log_json(test_ora_log):
+    file_data = load_base_log_json(test_ora_log)
+    # assert isinstance(file_data, dict)
 
 
-def test_replace_non_value(dict_with_none_value):
-    replaced_dict = replace_none_values(dict_with_none_value)
-    for item in replaced_dict.items():
-        print(item)
-        assert item is not None
-
-
-def test_read_key_list(test_key_list_file):
-    list_of_keys = read_key_list(test_key_list_file)
-    assert isinstance(list_of_keys, list)
-    assert len(list_of_keys) is not 0
+# def test_replace_non_value(dict_with_none_value):
+#     replaced_dict = replace_none_values(dict_with_none_value)
+#     for item in replaced_dict.items():
+#         print(item)
+#         assert item is not None
+#
+#
+# def test_read_key_list(test_key_list_file):
+#     list_of_keys = read_key_list(test_key_list_file)
+#     assert isinstance(list_of_keys, list)
+#     assert len(list_of_keys) is not 0
 
 

@@ -1,7 +1,7 @@
 import pytest
 from merge_siegfried import relabel_siegfried_log
 from merge_siegfried import merge_sf_logs
-from helper import load_json
+from helper import load_base_log_json
 
 
 @pytest.fixture()
