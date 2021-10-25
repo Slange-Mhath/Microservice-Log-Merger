@@ -1,5 +1,6 @@
 import ijson
 import logging
+import json
 
 
 def load_base_log_json(log_path):
@@ -9,12 +10,12 @@ def load_base_log_json(log_path):
     :return: returns the file as json
     """
     f = open(log_path, "rb")
-    objects = ijson.items(f, 'files.item.file')
+    objects = ijson.items(f, 'files.item')
     files = (o for o in objects)
     base_log = {}
     for file in files:
-        base_log[file["path"]] = file
-    print(base_log)
+        base_log[file["file"]["path"]] = file
+    return base_log
 
 
 def replace_none_values(log_dict):

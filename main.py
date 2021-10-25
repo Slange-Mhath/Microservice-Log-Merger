@@ -4,7 +4,8 @@ from merge_siegfried import merge_sf_logs
 from merge_exif import merge_exif_to_base_log
 from merge_mediainfo import merge_mediainfo
 import logging
-
+import memory_profiler as mem_profile
+import time
 
 def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
          mediainfo_log=None, occurrence_of_keys=None):
@@ -15,10 +16,12 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
     :param output_file: takes an optional user specified output file
     :return:
     """
+    print("Memory (Before): {}Mb".format(mem_profile.memory_usage()))
+    t1 = time.process_time()
     merged_log_files = {}
-    base_log_json = load_json(base_log_path)
+    base_log_json = load_base_log_json(base_log_path)
     if sf_log:
-        merged_log_files = merge_sf_logs(base_log_json, sf_log, "filename")
+        merged_log_files = merge_sf_logs(base_log_json, sf_log)
         if exif_log:
             if not f_key_list:
                 logging.error(
@@ -40,6 +43,9 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
             merged_log_files = merge_mediainfo(merged_log_files, mediainfo_log,
                                                f_key_list, matching_key="@ref")
     write_merged_f_log(merged_log_files, output_file)
+    t2 = time.process_time()
+    print("Memory (After): {}Mb".format(mem_profile.memory_usage()))
+    print("Took {} Seconds".format(t2 - t1))
 
 
 

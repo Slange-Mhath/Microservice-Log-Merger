@@ -1,6 +1,6 @@
 import logging
 from helper import replace_none_values
-import json
+import ijson
 
 
 def relabel_siegfried_log(log, sf_version):
@@ -30,7 +30,7 @@ def relabel_siegfried_log(log, sf_version):
     return sf_output
 
 
-def merge_sf_logs(base_log, enriching_log, matching_key):
+def merge_sf_logs(base_log, enriching_log):
     """
     Uses dict comprehension to create a new dict which adds the siegfried output
     at the matching file paths.
@@ -43,22 +43,16 @@ def merge_sf_logs(base_log, enriching_log, matching_key):
     respective file in the base_log
     :return: returns the now with siegfried output enriched integrity file.
     """
-    enriched_base_log = {}
-    # uses the file_path to become the parent key of the enriched_output to have
-    # a anchor point to map the log files which will enrich the enriched output.
-    for f in base_log["files"]:
-        enriched_base_log[f["file"]["path"]] = f
-    enriching_output = open(enriching_log, "r")
-    # this might create a performance issue?
-    for line in enriching_output:
-        enriching_json = json.loads(line)
-        try:
-            sf_version = enriching_json["siegfried"]
-        except KeyError:
-            sf_version = "unknown"
-        for f in enriching_json["files"]:
-            if f[matching_key] in enriched_base_log:
-                enriched_base_log[f[matching_key]].update(
-                    relabel_siegfried_log(f, sf_version))
-    enriching_output.close()
-    return enriched_base_log
+    sf_version = None
+    f = open(enriching_log, "rb")
+    objects = ijson.items(f, 'siegfried')
+    sf_log_head = (o for o in objects)
+    for sf_v in sf_log_head:
+        sf_version = sf_v
+    f = open(enriching_log, "rb")
+    objects = ijson.items(f, 'files.item')
+    sf_files = (o for o in objects if o['filename'] in base_log)
+    for sf_file in sf_files:
+        sf_file['matches'][0]["siegfried_version"] = sf_version
+        base_log[sf_file['filename']]['siegfried'] = sf_file['matches'][0]
+    return base_log
