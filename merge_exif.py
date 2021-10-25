@@ -13,9 +13,9 @@ def add_exif_info_to_db(exif_log_path, session, File, f_key_list, occurrence_of_
             if occurrence_of_keys:
                 sorted_field_keys_in_f_log = logg_keys_with_occurence(f,
                                                                       field_keys_in_f_log)
-        for k, v in sorted_field_keys_in_f_log.items():
-            logging.info(k, v)
-            print(k, v)
+                for k, v in sorted_field_keys_in_f_log.items():
+                    logging.info(k, v)
+                    print(k, v)
             session.query(File).filter(File.path == f["SourceFile"]).update(
                 {File.exif_file_info: json.dumps(create_enriching_exif(f, field_keys))}, synchronize_session=False)
             session.commit()
