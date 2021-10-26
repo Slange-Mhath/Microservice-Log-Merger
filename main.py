@@ -24,8 +24,10 @@ class File(Base):
     mediainfo_file_info = Column("mediainfo_file_info", String)
 
 
-engine = create_engine("sqlite:///mlm.db", )
-# engine = create_engine("sqlite:///:memory:",)
+# Connect to Postgres
+engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost/mlmdb')
+# Drop old DB
+Base.metadata.drop_all(engine)
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
