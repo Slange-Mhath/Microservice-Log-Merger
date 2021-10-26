@@ -38,8 +38,10 @@ def add_sf_info_to_db(sf_log_path, session, File):
                 sf_version = sf_file_json["siegfried"]
             except KeyError:
                 sf_version = "unknown"
-            for f in sf_file_json['files']:
+            for num, f in enumerate(sf_file_json['files']):
                 session.query(File).filter(File.path == f["filename"]).update(
                     {File.siegfried_file_info: json.dumps(relabel_siegfried_log(f, sf_version))},
                     synchronize_session=False)
-                session.commit()
+                if num % 1000 == 0:
+                    session.commit()
+            session.commit()

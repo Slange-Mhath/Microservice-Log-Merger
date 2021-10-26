@@ -6,10 +6,12 @@ def add_mediainfo_info_to_db(mediainfo_log_path, session, File):
     with open(mediainfo_log_path, "r") as mediainfo_log:
         mediainfo_json = json.load(mediainfo_log)
         mediainfo_log.close()
-        for f in mediainfo_json:
+        for num, f in enumerate(mediainfo_json):
             session.query(File).filter(File.path == f["media"]["@ref"]).update(
                 {File.mediainfo_file_info: json.dumps(f)}, synchronize_session=False)
-            session.commit()
+            if num % 1000 == 0:
+                session.commit()
+        session.commit()
 
 
 def replace_none_values(log_dict):

@@ -3,13 +3,17 @@ from merge_mediainfo import get_selected_mediainfo
 
 
 def add_ora_info_to_db(ora_log, session, File):
-    for f in ora_log["files"]:
+    for num, f in enumerate(ora_log["files"]):
         file = File()
         file.path = f["file"]["path"]
         file.timestamp = f["timestamp"]
         file.base_file_info = json.dumps(f["file"])
         session.add(file)
-        session.commit()
+
+        if num % 1000 == 0:
+            session.commit()
+
+    session.commit()
 
 
 def load_json(log_path):
