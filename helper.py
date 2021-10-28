@@ -9,7 +9,10 @@ def add_ora_info_to_db(ora_log, session, File):
         file.timestamp = f["timestamp"]
         file.base_file_info = json.dumps(f["file"])
         session.add(file)
-
+#if this is %100 it works fine but when I go up to %1000 it stopps working
+        # for some reason. Cause log["matches"] from Siegfried will be empty
+        # after 14001 files, while it shouldn't be cause the entries in the
+        # siegfried_logs are actually there.
         if num % 1000 == 0:
             session.commit()
 
