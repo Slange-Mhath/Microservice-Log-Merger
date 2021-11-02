@@ -1,5 +1,6 @@
 import json
 import logging
+log = logging.getLogger(__name__)
 
 
 def add_mediainfo_info_to_db(mediainfo_log_path, session, File):

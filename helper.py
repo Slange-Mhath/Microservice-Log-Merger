@@ -1,8 +1,11 @@
 import json
 from merge_mediainfo import get_selected_mediainfo
+import logging
+log = logging.getLogger(__name__)
 
 
 def add_ora_info_to_db(ora_log, session, File):
+    base_file_counter = 0
     for num, f in enumerate(ora_log["files"]):
         file = File()
         file.path = f["file"]["path"]
@@ -15,8 +18,11 @@ def add_ora_info_to_db(ora_log, session, File):
         # siegfried_logs are actually there.
         if num % 1000 == 0:
             session.commit()
+        base_file_counter += 1
 
     session.commit()
+    logging.info("{} base_file entries uploaded to DB".format(base_file_counter))
+    print("{} base_file entries uploaded to DB".format(base_file_counter))
 
 
 def load_json(log_path):

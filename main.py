@@ -10,6 +10,8 @@ from sqlalchemy.orm import sessionmaker, relationship
 import logging
 import memory_profiler as mem_profile
 import time
+log = logging.getLogger(__name__)
+
 
 Base = declarative_base()
 
@@ -43,11 +45,8 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
     :param output_file: takes an optional user specified output file
     :return:
     """
-    print("Memory (Before): {}Mb".format(mem_profile.memory_usage()))
-    # TODO: Change the merge functions so that we wont need to execute every
-    #  merge function per logfile but only one in main.py For this purpose it
-    #  would be good to not iterate over every file in the whole DB everytime
-    #  but to use the PK file_path to call the needed file info
+    logging.info("Memory (Before): {}Mb".format(mem_profile.memory_usage()))
+    # print("Memory (Before): {}Mb".format(mem_profile.memory_usage()))
     t1 = time.process_time()
     base_log_json = load_json(base_log_path)
     add_ora_info_to_db(base_log_json, session, File)
@@ -69,13 +68,20 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
             return
     write_merged_f_log(session, File, output_file, f_key_list)
     t2 = time.process_time()
-    print("Memory (After): {}Mb".format(mem_profile.memory_usage()))
-    print("Took {} Seconds".format(t2-t1))
+    # print("Memory (After): {}Mb".format(mem_profile.memory_usage()))
+    logging.info("Memory (After): {}Mb".format(mem_profile.memory_usage()))
+    # print("Took {} Seconds".format(t2-t1))
+    logging.info("Took {} Seconds".format(t2-t1))
 
 
 # TODO: Maybe I want to use a control structure to get rid of the messy if
 #  clauses
 if __name__ == "__main__":
+    logging.basicConfig(filename="mlmlog.log",
+                        filemode="a",
+                        format="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
+                        datefmt='%H:%M:%S',
+                        level=logging.INFO)
     parser = ArgumentParser(description="...")
     parser.add_argument("-base_log_path", metavar="base_log_path",
                         help="Path to the base log file which should be "
