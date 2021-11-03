@@ -1,5 +1,7 @@
+import json
+
 import pytest
-from helper import load_json, read_key_list, write_merged_f_log
+from helper import load_json, read_key_list, write_merged_f_log, logg_keys_with_occurence
 from merge_siegfried import add_sf_info_to_db
 from merge_mediainfo import add_mediainfo_info_to_db, replace_none_values
 from merge_exif import add_exif_info_to_db
@@ -175,22 +177,33 @@ def test_read_key_list(test_key_list_file):
     assert len(list_of_keys) is not 0
 
 
+def test_logg_keys_with_occurence(test_exif_log):
+    field_keys_in_f_log = {}
+    exif_log_json = load_json(test_exif_log)
+    sorted_keys = {}
+    keys_in_f = {}
+    for f in exif_log_json:
+        sorted_keys = logg_keys_with_occurence(f, field_keys_in_f_log)
+        for k, v in f.items():
+            if k not in keys_in_f:
+                keys_in_f[k] = v
+    assert sorted_keys.keys() == keys_in_f.keys()
+
+
 def test_add_ora_info_into_db(test_ora_log, test_session, test_db_file):
     base_log_json = load_json(test_ora_log)
     add_ora_info_to_db(base_log_json, test_session, test_db_file)
+    ora_db_files = session.query(File.base_file_info).all()
+    print(json.dumps(base_log_json['files'][0]['file']))
+    print(ora_db_files[0][0])
+    assert json.dumps(base_log_json['files'][0]['file']) == ora_db_files[0][0]
 
 
-def test_add_sf_info_into_db(test_sf_log, test_session, test_db_file):
+def test_write_merged_f_log(test_sf_log, test_exif_log, test_mediainfo_mult_f, test_session, test_db_file, test_output_file, test_key_list_file):
     add_sf_info_to_db(test_sf_log, test_session, test_db_file)
-
-
-def test_add_exif_info_into_db(test_exif_log, test_session, test_db_file, test_key_list_file, test_occurrence_of_keys):
-    add_exif_info_to_db(test_exif_log, test_session, test_db_file, test_key_list_file, test_occurrence_of_keys)
-
-
-def test_add_mediainfo_info_to_db(test_mediainfo_mult_f, test_session, test_db_file):
+    add_exif_info_to_db(test_exif_log, test_session, test_db_file,
+                        test_key_list_file, test_occurrence_of_keys)
     add_mediainfo_info_to_db(test_mediainfo_mult_f, test_session, test_db_file)
-
-
-def test_write_merged_f_log(test_session, test_db_file, test_output_file, test_key_list_file):
     write_merged_f_log(test_session, test_db_file, test_output_file, test_key_list_file)
+
+# TODO: Create assertions to the written file and compare if the files with the path from test_sf_log have the same info as the ones in the written file

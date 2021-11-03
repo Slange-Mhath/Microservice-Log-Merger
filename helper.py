@@ -12,10 +12,6 @@ def add_ora_info_to_db(ora_log, session, File):
         file.timestamp = f["timestamp"]
         file.base_file_info = json.dumps(f["file"])
         session.add(file)
-#if this is %100 it works fine but when I go up to %1000 it stopps working
-        # for some reason. Cause log["matches"] from Siegfried will be empty
-        # after 14001 files, while it shouldn't be cause the entries in the
-        # siegfried_logs are actually there.
         if num % 1000 == 0:
             session.commit()
         base_file_counter += 1
@@ -73,26 +69,26 @@ def read_key_list(key_list_f):
         return keys
 
 
-def delete_keys_with_str_seq(log_dict, list_of_keys):
-    """
-    :param log_dict: takes a dict with the superficial keys
-    :param list_of_keys: takes a list of keys
-    :return: cleaned log_dict from the keys that matches the seq with*
-    """
-    if list_of_keys:
-        # This creates a list of wildcards from the list of keys
-        # This could possibly be an extra function
-        list_of_str_seq = [k for k in list_of_keys if k.endswith("*")]
-        # filters every key which ends of * and saves it to a list of str seqs
-        if list_of_str_seq:
-            for str_seq in list_of_str_seq:
-                for key in list(log_dict.keys()):
-                    if key.startswith(str_seq[:-1]):
-                        # this checks if the key in the log starts with the wildcard
-                        # sequence while ignoring the *
-                        key_to_delete = key
-                        del log_dict[key_to_delete]
-        return log_dict
+# def delete_keys_with_str_seq(log_dict, list_of_keys):
+#     """
+#     :param log_dict: takes a dict with the superficial keys
+#     :param list_of_keys: takes a list of keys
+#     :return: cleaned log_dict from the keys that matches the seq with*
+#     """
+#     if list_of_keys:
+#         # This creates a list of wildcards from the list of keys
+#         # This could possibly be an extra function
+#         list_of_str_seq = [k for k in list_of_keys if k.endswith("*")]
+#         # filters every key which ends of * and saves it to a list of str seqs
+#         if list_of_str_seq:
+#             for str_seq in list_of_str_seq:
+#                 for key in list(log_dict.keys()):
+#                     if key.startswith(str_seq[:-1]):
+#                         # this checks if the key in the log starts with the wildcard
+#                         # sequence while ignoring the *
+#                         key_to_delete = key
+#                         del log_dict[key_to_delete]
+#         return log_dict
 
 
 def logg_keys_with_occurence(f_log, field_keys_in_f_log):
