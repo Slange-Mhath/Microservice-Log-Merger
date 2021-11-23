@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from merge_siegfried import relabel_siegfried_log, add_sf_info_to_db
 from helper import load_json
@@ -100,15 +102,41 @@ def test_log():
 def test_add_ora_info_into_db(test_ora_log, test_session, test_db_file):
     base_log_json = load_json(test_ora_log)
     add_ora_info_to_db(base_log_json, test_session, test_db_file)
+    ora_files = session.query(test_db_file).all()
+    for ora_f in ora_files:
+        ora_f_file_info = json.loads(ora_f.base_file_info)
+        assert ora_f_file_info["path"] == ora_f.path
+        if ora_f.path == "/AORTA/PRD/DATA/ora_var/fedora/objects/2008/0520/10/26/uuid_7a79f51b-509f-476f-b1d0-1466dbfd9c78":
+            assert ora_f_file_info["size"] == "20004"
 
 
 def test_add_sf_info_into_db(test_sf_log, test_session, test_db_file):
     add_sf_info_to_db(test_sf_log, test_session, test_db_file)
+    sf_files = session.query(test_db_file).all()
+    for sf_file in sf_files:
+        if sf_file.siegfried_file_info:
+            sf_file_info = json.loads(sf_file.siegfried_file_info)
+            if sf_file.path == "/ORA4/PRD/REVIEW/ff/85/03/ff85037813a09ea793b4bc2d860324d65184c20f":
+                assert sf_file_info["siegfried"]["format"] == "PDF"
 
 
-# def test_merge_sf_logs(test_session, test_db_file):
-#     merged_logs = merge_sf_logs(test_session, test_db_file)
-
+def test_relabel_siegfried_log(test_sf_log):
+    siegfried_version = "1.7"
+    relabeled_sf_info = []
+    with open(test_sf_log, "r") as sf_log:
+        sf_counter = 0
+        for line in sf_log:
+            sf_file_json = json.loads(line)
+            try:
+                sf_version = sf_file_json["siegfried"]
+            except KeyError:
+                sf_version = "unknown"
+            for num, f in enumerate(sf_file_json['files']):
+                if f["matches"]:
+                    relabeled_sf_info.append(relabel_siegfried_log(f, siegfried_version))
+    for sf_info in relabeled_sf_info:
+        assert sf_info["siegfried"]
+        assert sf_info["siegfried"]["siegfried_version"] == siegfried_version
 
 
 
