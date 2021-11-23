@@ -60,7 +60,7 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
                 "the Exif log.")
             return
     if mediainfo_log:
-        add_mediainfo_info_to_db(mediainfo_log, session, File)
+        add_mediainfo_info_to_db(f_key_list, mediainfo_log, session, File)
         if not f_key_list:
             logging.error(
                 "Please provide a file with the keys if you want to merge "

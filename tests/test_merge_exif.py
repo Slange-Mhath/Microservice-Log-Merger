@@ -21,7 +21,7 @@ class File(Base):
 
 
 # engine = create_engine("sqlite:///mlm.db", )
-engine = create_engine("sqlite:///:memory:",)
+engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost/mlmdb')
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()

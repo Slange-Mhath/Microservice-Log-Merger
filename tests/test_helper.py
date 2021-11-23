@@ -24,7 +24,7 @@ class File(Base):
 
 
 # engine = create_engine("sqlite:///mlm.db", )
-engine = create_engine("sqlite:///:memory:",)
+engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost/mlmdb')
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -194,8 +194,6 @@ def test_add_ora_info_into_db(test_ora_log, test_session, test_db_file):
     base_log_json = load_json(test_ora_log)
     add_ora_info_to_db(base_log_json, test_session, test_db_file)
     ora_db_files = session.query(File.base_file_info).all()
-    print(json.dumps(base_log_json['files'][0]['file']))
-    print(ora_db_files[0][0])
     assert json.dumps(base_log_json['files'][0]['file']) == ora_db_files[0][0]
 
 
@@ -205,5 +203,8 @@ def test_write_merged_f_log(test_sf_log, test_exif_log, test_mediainfo_mult_f, t
                         test_key_list_file, test_occurrence_of_keys)
     add_mediainfo_info_to_db(test_mediainfo_mult_f, test_session, test_db_file)
     write_merged_f_log(test_session, test_db_file, test_output_file, test_key_list_file)
+    written_output = open("tests/dummy_logs/output_file.json", "r", encoding="utf-8")
+    for f in written_output:
+        print(f)
 
 # TODO: Create assertions to the written file and compare if the files with the path from test_sf_log have the same info as the ones in the written file

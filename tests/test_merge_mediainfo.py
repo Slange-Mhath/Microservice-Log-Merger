@@ -23,7 +23,7 @@ class File(Base):
 
 
 # engine = create_engine("sqlite:///mlm.db", )
-engine = create_engine("sqlite:///:memory:",)
+engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost/mlmdb')
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -318,14 +318,17 @@ def test_add_exif_info_into_db(test_exif_log, test_session, test_db_file, test_k
     add_exif_info_to_db(test_exif_log, test_session, test_db_file, test_key_list_file, test_occurrence_of_keys)
 
 
-def test_add_mediainfo_info_to_db(test_mediainfo_mult_f, test_session, test_db_file):
-    add_mediainfo_info_to_db(test_mediainfo_mult_f, test_session, test_db_file)
+def test_add_mediainfo_info_to_db(test_key_list_file, test_mediainfo_mult_f, test_session, test_db_file):
+    media_infos = add_mediainfo_info_to_db(test_key_list_file, test_mediainfo_mult_f, test_session, test_db_file)
+    print(media_infos)
 
 
-def test_merge_mediainfo(test_occurrence_of_keys, test_key_list_file, test_session, test_db_file):
-    merged_sf_logs = merge_sf_logs(test_session, test_db_file)
-    merged_logs_with_exif = merge_exif_to_base_log(test_session, test_db_file)
-    merged_logs_with_mediainfo = merge_mediainfo(test_key_list_file, test_session, test_db_file)
+
+
+# def test_merge_mediainfo(test_occurrence_of_keys, test_key_list_file, test_session, test_db_file):
+#     merged_sf_logs = merge_sf_logs(test_session, test_db_file)
+#     merged_logs_with_exif = merge_exif_to_base_log(test_session, test_db_file)
+#     merged_logs_with_mediainfo = merge_mediainfo(test_key_list_file, test_session, test_db_file)
 
 
 # def test_merge_mediainfo(test_ora_log, test_sf_log, test_exif_log,

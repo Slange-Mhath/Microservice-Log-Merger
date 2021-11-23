@@ -20,7 +20,7 @@ class File(Base):
 
 
 # engine = create_engine("sqlite:///mlm.db", )
-engine = create_engine("sqlite:///:memory:",)
+engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost/mlmdb')
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -106,8 +106,8 @@ def test_add_sf_info_into_db(test_sf_log, test_session, test_db_file):
     add_sf_info_to_db(test_sf_log, test_session, test_db_file)
 
 
-def test_merge_sf_logs(test_session, test_db_file):
-    merged_logs = merge_sf_logs(test_session, test_db_file)
+# def test_merge_sf_logs(test_session, test_db_file):
+#     merged_logs = merge_sf_logs(test_session, test_db_file)
 
 
 

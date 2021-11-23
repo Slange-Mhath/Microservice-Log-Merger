@@ -1,5 +1,4 @@
 import json
-from merge_mediainfo import get_selected_mediainfo
 import logging
 log = logging.getLogger(__name__)
 
@@ -48,9 +47,7 @@ def write_merged_f_log(session, File, output_file, f_key_list):
         if f.mediainfo_file_info is not None:
             mediainfo_file_info_dict = json.loads(f.mediainfo_file_info)
             merged_output[f.path].update({
-                "mediainfo": get_selected_mediainfo(
-                    field_keys,
-                    mediainfo_file_info_dict)})
+                "mediainfo": json.loads(f.mediainfo_file_info)})
     output = open(output_file, "w", encoding="utf-8")
     for f in merged_output.values():
         json.dump(f, output, sort_keys=True, ensure_ascii=True)
