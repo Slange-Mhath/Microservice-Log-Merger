@@ -65,6 +65,12 @@ def test_mediainfo_mult_f():
 
 
 @pytest.fixture()
+def test_mediainfo_server():
+    mediainfo_log = "tests/dummy_logs/new_mediainfo_server.log"
+    return mediainfo_log
+
+
+@pytest.fixture()
 def test_file():
     path_to_ora_file = "tests/dummy_logs/dpms-ora-truncated.json"
     return path_to_ora_file
@@ -318,8 +324,8 @@ def test_add_exif_info_into_db(test_exif_log, test_session, test_db_file, test_k
     add_exif_info_to_db(test_exif_log, test_session, test_db_file, test_key_list_file, test_occurrence_of_keys)
 
 
-def test_add_mediainfo_info_to_db(test_key_list_file, test_mediainfo_mult_f, test_session, test_db_file):
-    media_infos = add_mediainfo_info_to_db(test_key_list_file, test_mediainfo_mult_f, test_session, test_db_file)
+def test_add_mediainfo_info_to_db(test_key_list_file, test_mediainfo_server, test_session, test_db_file):
+    media_infos = add_mediainfo_info_to_db(test_key_list_file, test_mediainfo_server, test_session, test_db_file)
     print(media_infos)
 
 

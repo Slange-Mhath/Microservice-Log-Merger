@@ -19,19 +19,39 @@ def replace_none_values(log_dict):
     return log_dict
 
 
+# def add_mediainfo_info_to_db(f_key_list, mediainfo_log_path, session, File):
+#     field_keys = read_key_list(f_key_list)
+#     with open(mediainfo_log_path, "r") as mediainfo_log:
+#         mediainfo_json = json.load(mediainfo_log)
+#         mediainfo_log.close()
+#         for num, f in enumerate (mediainfo_json):
+#             if len(f) > 1:
+#                 print("We are missing something")
+#
+#         session.query(File).filter(File.path == f[0]["media"]["@ref"]).update(
+#             {File.mediainfo_file_info: get_selected_mediainfo(field_keys,
+#                                                               f[0])},
+#             synchronize_session=False)
+#         if num % 1000 == 0:
+#             session.commit()
+#         session.commit()
+
+
 def add_mediainfo_info_to_db(f_key_list, mediainfo_log_path, session, File):
     field_keys = read_key_list(f_key_list)
     with open(mediainfo_log_path, "r") as mediainfo_log:
-        for line in mediainfo_log:
-            mediainfo_json = json.loads(line)
-            for num, f in enumerate(mediainfo_json):
-                session.query(File).filter(File.path == f["media"]["@ref"]).update(
-                    {File.mediainfo_file_info: get_selected_mediainfo(field_keys,
-                                                                      f)},
-                    synchronize_session=False)
-                if num % 1000 == 0:
-                    session.commit()
-            session.commit()
+        mediainfo_json = json.load(mediainfo_log)
+        mediainfo_log.close()
+        for num, f in enumerate(mediainfo_json):
+            if len(f) > 1:
+                print("We are missing data! Oh OH!")
+            session.query(File).filter(File.path == f[0]["media"]["@ref"]).update(
+                {File.mediainfo_file_info: get_selected_mediainfo(field_keys,
+                                                                  f[0])},
+                synchronize_session=False)
+            if num % 1000 == 0:
+                session.commit()
+        session.commit()
 
 
 def get_selected_mediainfo(field_keys, raw_mediainfo):
