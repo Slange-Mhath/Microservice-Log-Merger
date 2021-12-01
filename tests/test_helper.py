@@ -84,6 +84,12 @@ def test_mediainfo_mult_f():
 
 
 @pytest.fixture()
+def test_mediainfo_server():
+    mediainfo_log = "tests/dummy_logs/new_mediainfo_server.log"
+    return mediainfo_log
+
+
+@pytest.fixture()
 def test_key_list_file():
     key_list_file = "tests/dummy_logs/key_list.log"
     return key_list_file
@@ -167,7 +173,6 @@ def test_load_json(test_file):
 def test_replace_non_value(dict_with_none_value):
     replaced_dict = replace_none_values(dict_with_none_value)
     for item in replaced_dict.items():
-        print(item)
         assert item is not None
 
 
@@ -197,14 +202,19 @@ def test_add_ora_info_into_db(test_ora_log, test_session, test_db_file):
     assert json.dumps(base_log_json['files'][0]['file']) == ora_db_files[0][0]
 
 
-def test_write_merged_f_log(test_sf_log, test_exif_log, test_mediainfo_mult_f, test_session, test_db_file, test_output_file, test_key_list_file):
+def test_write_merged_f_log(test_sf_log, test_exif_log, test_mediainfo_server, test_session, test_db_file, test_output_file, test_key_list_file):
     add_sf_info_to_db(test_sf_log, test_session, test_db_file)
     add_exif_info_to_db(test_exif_log, test_session, test_db_file,
                         test_key_list_file, test_occurrence_of_keys)
-    add_mediainfo_info_to_db(test_mediainfo_mult_f, test_session, test_db_file)
+    add_mediainfo_info_to_db(test_key_list_file, test_mediainfo_server, test_session, test_db_file)
     write_merged_f_log(test_session, test_db_file, test_output_file, test_key_list_file)
     written_output = open("tests/dummy_logs/output_file.json", "r", encoding="utf-8")
-    for f in written_output:
-        print(f)
+    for f_output in written_output:
+        f_output_dict = json.loads(f_output)
+        if f_output_dict["file"]["path"] == "/ORA4/PRD/REVIEW/ff/85/03/ff85037813a09ea793b4bc2d860324d65184c20f":
+            assert f_output_dict["siegfried"]["siegfried_version"] == "1.9.1"
+        elif f_output_dict["file"]["path"] == "/AORTA/PRD/DATA/ora_var/fedora/objects/2008/0520/10/26/uuid_7a79f51b-509f-476f-b1d0-1466dbfd9c78":
+            assert f_output_dict["mediainfo"]["General"]["CompleteName"] == f_output_dict["file"]["path"]
+        elif f_output_dict["file"]["path"] == "/ORA/PRD/DATA/ora_var/fedora/objects/2008/0520/10/26/uuid_7a79f51b-509f-476f-b1d0-1466dbfd9c78":
+            assert f_output_dict["exif"]["FileType"] == "XLSX"
 
-# TODO: Create assertions to the written file and compare if the files with the path from test_sf_log have the same info as the ones in the written file

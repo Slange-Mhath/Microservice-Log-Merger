@@ -1,11 +1,12 @@
 import pytest
-from merge_exif import add_exif_info_to_db
+from merge_exif import add_exif_info_to_db, create_enriching_exif
 from helper import load_json, read_key_list
 from merge_siegfried import add_sf_info_to_db
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, update
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from main import File, add_ora_info_to_db
+import json
 
 Base = declarative_base()
 
@@ -173,22 +174,15 @@ def test_add_sf_info_into_db(test_sf_log, test_session, test_db_file):
 
 def test_add_exif_info_into_db(test_exif_log, test_session, test_db_file, test_key_list_file, test_occurrence_of_keys):
     add_exif_info_to_db(test_exif_log, test_session, test_db_file, test_key_list_file, test_occurrence_of_keys)
+    exif_files = session.query(test_db_file).all()
+    for exif_file in exif_files:
+        if exif_file.path == "/ORA/PRD/DATA/ora_var/fedora/objects/2008/0520/10/26/uuid_7a79f51b-509f-476f-b1d0-1466dbfd9c78":
+            exif_file_info_json = json.loads(exif_file.exif_file_info)
+            assert exif_file_info_json["LastModifiedBy"] == "Rick&Morty"
 
 
-def test_merge_exif_logs(test_occurrence_of_keys, test_session, test_db_file):
-    merged_sf_logs = merge_sf_logs(test_session, test_db_file)
-    merged_logs_with_exif = merge_exif_to_base_log(test_occurrence_of_keys, test_session, test_db_file)
-
-
-# def test_desired_exif_keys(test_ora_log, test_sf_log, test_exif_log,
-#                                 test_key_list_file):
-#     merged_sf_log = merge_sf_logs(load_json(test_ora_log), test_sf_log,
-#                                   "filename")
-#     desired_keys = read_key_list(test_key_list_file)
-#     merged_logs_with_exif = merge_exif_to_base_log(test_exif_log, merged_sf_log,
-#                                                    test_key_list_file,
-#                                                    "SourceFile")
-#     for f in merged_sf_log:
-#         exif_keys = merged_logs_with_exif[f]["exif"].keys()
-#         for exif_k in exif_keys:
-#             assert exif_k in desired_keys
+def test_create_enriching_exif(test_exif_dict, test_key_list_file):
+    key_list = read_key_list(test_key_list_file)
+    enriched_exif = create_enriching_exif(test_exif_dict, key_list)
+    for key in enriched_exif.keys():
+        assert key in key_list
