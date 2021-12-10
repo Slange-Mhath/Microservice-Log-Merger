@@ -32,8 +32,7 @@ def load_json(log_path):
     return log_json
 
 
-def write_merged_f_log(session, File, output_file, f_key_list):
-    field_keys = read_key_list(f_key_list)
+def write_merged_f_log(session, File, output_file):
     merged_output = {}
     db_files = session.query(File).all()
     for f in db_files:
@@ -45,7 +44,6 @@ def write_merged_f_log(session, File, output_file, f_key_list):
             merged_output[f.path].update(
                 {"exif": json.loads(f.exif_file_info)})
         if f.mediainfo_file_info is not None:
-            mediainfo_file_info_dict = json.loads(f.mediainfo_file_info)
             merged_output[f.path].update({
                 "mediainfo": json.loads(f.mediainfo_file_info)})
     output = open(output_file, "w", encoding="utf-8")
@@ -64,28 +62,6 @@ def read_key_list(key_list_f):
             keys = f.read().splitlines()
             f.close()
         return keys
-
-
-# def delete_keys_with_str_seq(log_dict, list_of_keys):
-#     """
-#     :param log_dict: takes a dict with the superficial keys
-#     :param list_of_keys: takes a list of keys
-#     :return: cleaned log_dict from the keys that matches the seq with*
-#     """
-#     if list_of_keys:
-#         # This creates a list of wildcards from the list of keys
-#         # This could possibly be an extra function
-#         list_of_str_seq = [k for k in list_of_keys if k.endswith("*")]
-#         # filters every key which ends of * and saves it to a list of str seqs
-#         if list_of_str_seq:
-#             for str_seq in list_of_str_seq:
-#                 for key in list(log_dict.keys()):
-#                     if key.startswith(str_seq[:-1]):
-#                         # this checks if the key in the log starts with the wildcard
-#                         # sequence while ignoring the *
-#                         key_to_delete = key
-#                         del log_dict[key_to_delete]
-#         return log_dict
 
 
 def logg_keys_with_occurence(f_log, field_keys_in_f_log):

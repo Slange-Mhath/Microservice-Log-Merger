@@ -66,7 +66,7 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
                 "Please provide a file with the keys if you want to merge "
                 "the Mediainfo log.")
             return
-    write_merged_f_log(session, File, output_file, f_key_list)
+    write_merged_f_log(session, File, output_file)
     t2 = time.process_time()
     # print("Memory (After): {}Mb".format(mem_profile.memory_usage()))
     logging.info("Memory (After): {}Mb".format(mem_profile.memory_usage()))
@@ -77,11 +77,11 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
 # TODO: Maybe I want to use a control structure to get rid of the messy if
 #  clauses
 if __name__ == "__main__":
-    logging.basicConfig(filename="mlmlog.log",
-                        filemode="a",
-                        format="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
-                        datefmt='%H:%M:%S',
-                        level=logging.INFO)
+    # logging.basicConfig(filename="mlmlog.log",
+    #                     filemode="a",
+    #                     format="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
+    #                     datefmt='%H:%M:%S',
+    #                     level=logging.INFO)
     parser = ArgumentParser(description="...")
     parser.add_argument("-base_log_path", metavar="base_log_path",
                         help="Path to the base log file which should be "
