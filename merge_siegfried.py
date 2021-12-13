@@ -43,10 +43,10 @@ def add_sf_info_to_db(sf_log_path, session, File):
             for num, f in enumerate(sf_file_json['files']):
                 if f["matches"]:
                     # and session.query(File).filter(File.path == f["filename"])
+                    sf_counter += session.query(File).filter(File.path == f["filename"]).count()
                     session.query(File).filter(File.path == f["filename"]).update(
                         {File.siegfried_file_info: json.dumps(relabel_siegfried_log(f, sf_version))},
                         synchronize_session=False)
-                    sf_counter+=1
                     # if this is %100 it works fine but when I go up to %1000 it stopps working
                     # for some reason. Cause log["matches"] from Siegfried will be empty
                     # after 14001 files, while it shouldn't be cause the entries in the

@@ -27,11 +27,12 @@ def add_mediainfo_info_to_db(f_key_list, mediainfo_log_path, session, File):
         mediainfo_log.close()
         for mediainfo_list in mediainfo_json:
             for num, f in enumerate(mediainfo_list):
+                mediainfo_counter += session.query(File).filter(
+                    File.path == f["media"]["@ref"]).count()
                 session.query(File).filter(File.path == f["media"]["@ref"]).update(
                     {File.mediainfo_file_info: get_selected_mediainfo(field_keys,
                                                                       f)},
                     synchronize_session=False)
-                mediainfo_counter += 1
                 if num % 1000 == 0:
                     session.commit()
         session.commit()
