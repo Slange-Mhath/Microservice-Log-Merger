@@ -21,8 +21,7 @@ def add_exif_info_to_db(exif_log_path, session, File, f_key_list,
                         create_enriching_exif(f, field_keys))},
                     synchronize_session=False)
                 exif_counter += 1
-                print("Matching File")
-            if occurrence_of_keys is True:
+            if occurrence_of_keys == "True":
                 sorted_field_keys_in_f_log = logg_keys_with_occurence(f,
                                                                       field_keys_in_f_log)
             if num % 1000 == 0:
@@ -39,7 +38,6 @@ def create_enriching_exif(exif_dict, field_keys):
     enriching_exif = {}
     for key in field_keys:
         try:
-            print("create_enriching_exif")
             if check_field_for_excessive_data(exif_dict[key]) is False:
                 enriching_exif[key] = exif_dict[key]
             else:
