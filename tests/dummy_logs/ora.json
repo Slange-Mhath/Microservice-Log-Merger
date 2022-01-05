@@ -45,6 +45,21 @@
           "sha512": "c6e6317f6eabe876200ab83bbf075c88e1d5a0dc0bf62ac20a52391b39ab66bf850238b3c2720da403dd521fab7f01e99e8cfbc6487613fb3e573cc9f1ce2f86"
         }
       }
+    },
+    {
+      "timestamp": "2021-06-02T01:00:03+0100",
+      "file": {
+        "inode": "6615583",
+        "mode": "664",
+        "gid": "1004",
+        "uid": "1004",
+        "size": "20004",
+        "mtime": "2018-03-18T20:29:23+0000",
+        "path": "test_pdfs/A+study+of+the+Middle+English+treatises+on+grammar+(Part+2+-+file+1)",
+        "hash": {
+          "sha512": "c6e6317f6eabe876200ab83bbf075c88e1d5a0dc0bf62ac20a52391b39ab66bf850238b3c2720da403dd521fab7f01e99e8cfbc6487613fb3e573cc9f1ce2f86"
+        }
+      }
     }
   ]
 }

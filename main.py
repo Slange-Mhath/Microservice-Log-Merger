@@ -3,7 +3,7 @@ from helper import load_json, add_ora_info_to_db, write_merged_f_log
 from merge_siegfried import add_sf_info_to_db
 from merge_exif import add_exif_info_to_db
 from merge_mediainfo import add_mediainfo_info_to_db
-
+from merge_analysed_pdfs import add_pdf_info_to_db
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, update
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
@@ -24,6 +24,7 @@ class File(Base):
     siegfried_file_info = Column("siegfried_file_info", String)
     exif_file_info = Column("exif_file_info", String)
     mediainfo_file_info = Column("mediainfo_file_info", String)
+    pdf_info = Column("pdf_info", String)
 
 
 # Connect to Postgres
@@ -36,7 +37,7 @@ session = Session()
 file = File()
 
 
-def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
+def main(base_log_path, sf_log, exif_log, pdf_analyser_log, f_key_list=None, output_file=None,
          mediainfo_log=None, occurrence_of_keys=None):
     """
     Calls the different functions in order to merge and write the final output
@@ -52,6 +53,8 @@ def main(base_log_path, sf_log, exif_log, f_key_list=None, output_file=None,
     add_ora_info_to_db(base_log_json, session, File)
     if sf_log:
         add_sf_info_to_db(sf_log, session, File)
+    if pdf_analyser_log:
+        add_pdf_info_to_db(pdf_analyser_log, session, File)
     if exif_log:
         add_exif_info_to_db(exif_log, session, File, f_key_list, occurrence_of_keys)
         if not f_key_list:
@@ -91,6 +94,9 @@ if __name__ == "__main__":
     parser.add_argument("-exif_log_path", "--exif_log_path",
                         dest="exif_log_path",
                         help="Path to the exif log file")
+    parser.add_argument("-pdf_analyser_log_path", "--pdf_analyser_log_path",
+                        dest="pdf_analyser_log_path",
+                        help="Path to the pdf analyser log file")
     parser.add_argument("-dest_file_path", "--dest_file_path",
                         dest="dest_file_path",
                         help="Path to write the merged file log")
@@ -105,5 +111,5 @@ if __name__ == "__main__":
                         help="Set to true if you want to get information about "
                              "the occurrence of the keys in the log")
     args = parser.parse_args()
-    main(args.base_log_path, args.sf_log_path, args.exif_log_path,
+    main(args.base_log_path, args.sf_log_path, args.exif_log_path, args.pdf_analyser_log_path,
          args.f_key_list, args.dest_file_path, args.mediainfo_log_path, args.occurrence_of_keys)

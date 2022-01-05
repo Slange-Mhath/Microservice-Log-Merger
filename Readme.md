@@ -23,6 +23,10 @@ Specify the file path to the file where the merged output should be written to.
 
 The MLM currently supports [Exif](https://github.com/exiftool/exiftool), and [Mediainfo](https://mediaarea.net/en/MediaInfo) as well. To add the Exif tool output to the merged file add the following parameters.  
 
+**-pdf_analyser_log_path**
+
+Identify if PDF files are images and attach the information in the output. Please ensure that your file follows the example structure specified [here](#pdf-analyser-log-output).
+
 **-occurrence_of_keys**
 
 To display a statistic which fields and how often they occur in the merged log set this to True (-occurrence_of_keys "True"). Otherwise the default value will be False and thus the statistic not calculated or shown.
@@ -97,6 +101,18 @@ Running the script with every optional parameter would look like this:
    ]
 }
 ```
+
+### Pdf Analyser log Output
+```json
+{ "test_pdfs/602351290.pdf": 
+    {"isText": true, "tool_version_info": "\nPyMuPDF 1.19.1: Python bindings for the MuPDF 1.19.0 library.\nVersion date: 2021-10-23 00:00:01.\nBuilt for Python 3.9 on darwin (64-bit).\n"}, 
+  "test_pdfs/A+study+of+the+Middle+English+treatises+on+grammar+(Part+2+-+file+1)": 
+    {"isText": false, "tool_version_info": "\nPyMuPDF 1.19.1: Python bindings for the MuPDF 1.19.0 library.\nVersion date: 2021-10-23 00:00:01.\nBuilt for Python 3.9 on darwin (64-bit).\n"}, 
+  "test_pdfs/chapter+3+-+chapter+4": {"isText": false, "tool_version_info": "\nPyMuPDF 1.19.1: Python bindings for the MuPDF 1.19.0 library.\nVersion date: 2021-10-23 00:00:01.\nBuilt for Python 3.9 on darwin (64-bit).\n"}
+}
+```
+
+
 ### Exif Output
 ```json
 [{
