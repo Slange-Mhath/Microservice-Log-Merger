@@ -1,5 +1,6 @@
 import json
 import logging
+
 log = logging.getLogger(__name__)
 
 
@@ -7,16 +8,21 @@ def add_ora_info_to_db(ora_log, session, File):
     base_file_counter = 0
     for num, f in enumerate(ora_log["files"]):
         file = File()
-        file.path = f["file"]["path"]
-        file.timestamp = f["timestamp"]
-        file.base_file_info = json.dumps(f["file"])
-        session.add(file)
-        if num % 1000 == 0:
-            session.commit()
-        base_file_counter += 1
+        if session.query(File).filter(File.path == f["file"]["path"]).first():
+            logging.warning("{} is already in the DB".format(f["file"]["path"]))
+            continue
+        else:
+            file.path = f["file"]["path"]
+            file.timestamp = f["timestamp"]
+            file.base_file_info = json.dumps(f["file"])
+            session.add(file)
+            if num % 1000 == 0:
+                session.commit()
+            base_file_counter += 1
 
     session.commit()
-    logging.info("{} base_file entries uploaded to DB".format(base_file_counter))
+    logging.info(
+        "{} base_file entries uploaded to DB".format(base_file_counter))
     print("{} base_file entries uploaded to DB".format(base_file_counter))
 
 
@@ -79,3 +85,4 @@ def logg_keys_with_occurence(f_log, field_keys_in_f_log):
                                   sorted(field_keys_in_f_log.items(),
                                          key=lambda item: item[1])}
     return sorted_field_keys_in_f_log
+
