@@ -46,6 +46,9 @@ def write_merged_f_log(session, File, output_file):
                                  "file": json.loads(f.base_file_info), }
         if f.siegfried_file_info is not None:
             merged_output[f.path].update(json.loads(f.siegfried_file_info))
+        if f.pdf_info is not None:
+            merged_output[f.path].update({
+                "pdf_info": json.loads(f.pdf_info)})
         if f.exif_file_info is not None:
             merged_output[f.path].update(
                 {"exif": json.loads(f.exif_file_info)})
