@@ -3,6 +3,30 @@
 ## A python script which will merge the different json outputs of Microservices.
 Currently our MLM is supporting [Siegfried](https://github.com/richardlehane/siegfried), [Exif](https://github.com/exiftool/exiftool), and more to come. 
 
+
+## Requirements
+
+This tool is developed and tested on Python 3.9
+
+- SQLAlchemy
+  ```python -m pip install SQLAlchemy```
+  
+- Memory-profiler
+  ```python -m pip install memory-profiler```
+
+- Psycopg2
+  ```python -m pip install psycopg2-binary``
+
+### Database:
+
+The MLM uses the postgresql db, which should be set up like this:
+
+- Create database mlmdb
+- Create user mlm with encrypted password
+- Grant all privileges (or transfer ownership) on database mlmdb to mlm
+- On Linux adjust ```/var/lib/pgsql/data/pg_hba.conf``` at the bottom to allow verification via password rather than ident or trust
+
+
 ## USAGE
 
 `git clone https://github.com/Slange-Mhath/Microservice-Log-Merger`
