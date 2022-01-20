@@ -22,8 +22,7 @@ def add_exif_info_to_db(exif_log_path, session, File, f_key_list,
                     synchronize_session=False)
                 exif_counter += 1
             if occurrence_of_keys == "True":
-                sorted_field_keys_in_f_log = logg_keys_with_occurence(f,
-                                                                      field_keys_in_f_log)
+                sorted_field_keys_in_f_log = logg_keys_with_occurence(f, field_keys_in_f_log)
             if num % 1000 == 0:
                 session.commit()
         session.commit()
@@ -31,6 +30,7 @@ def add_exif_info_to_db(exif_log_path, session, File, f_key_list,
             "{} exif entries uploaded into the DB".format(exif_counter))
         print("{} exif entries uploaded into the DB".format(exif_counter))
         for k, v in sorted_field_keys_in_f_log.items():
+            print(f"The field {k} occurs {v} times")
             logging.info(f"The field {k} occurs {v} times")
 
 

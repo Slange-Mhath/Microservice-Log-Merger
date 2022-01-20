@@ -73,19 +73,27 @@ def read_key_list(key_list_f):
         return keys
 
 
-def logg_keys_with_occurence(f_log, field_keys_in_f_log):
-    """
-    :param f_log: log of a file as dict
-    :param field_keys_in_f_log: a dict to store the keys with their occurrence
-    :return:
-    """
-    for key in f_log.keys():
-        if key not in field_keys_in_f_log:
-            field_keys_in_f_log[key] = 1
-        else:
-            field_keys_in_f_log[key] += 1
-    sorted_field_keys_in_f_log = {k: v for k, v in
-                                  sorted(field_keys_in_f_log.items(),
-                                         key=lambda item: item[1])}
-    return sorted_field_keys_in_f_log
+# def logg_keys_with_occurence(f_log, field_keys_in_f_log):
+#     """
+#     :param f_log: log of a file as dict
+#     :param field_keys_in_f_log: a dict to store the keys with their occurrence
+#     :return:
+#     """
+#     for key in f_log.keys():
+#         if key not in field_keys_in_f_log:
+#             field_keys_in_f_log[key] = 1
+#             print(field_keys_in_f_log)
+#         else:
+#             field_keys_in_f_log[key] += 1
+#     sorted_field_keys_in_f_log = {k: v for k, v in
+#                                   sorted(field_keys_in_f_log.items(),
+#                                          key=lambda item: item[1])}
+#     return sorted_field_keys_in_f_log
 
+def logg_keys_with_occurence(f, field_keys_in_f):
+    for key in f.keys():
+        if key not in field_keys_in_f:
+            field_keys_in_f[key] = 1
+        else:
+            field_keys_in_f[key] += 1
+    return field_keys_in_f
