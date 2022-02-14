@@ -1,6 +1,7 @@
 from helper import read_key_list, logg_keys_with_occurence
 import json
 import logging
+import ijson
 
 log = logging.getLogger(__name__)
 
@@ -12,9 +13,8 @@ def add_exif_info_to_db(exif_log_path, session, File, f_key_list,
     sorted_field_keys_in_f_log = {}
     exif_counter = 0
     with open(exif_log_path, "r") as exif_log:
-        exif_json = json.load(exif_log)
-        exif_log.close()
-        for num, f in enumerate(exif_json):
+        files = ijson.items(exif_log, "item")
+        for num, f in enumerate(files):
             if session.query(File).filter(File.path == f["SourceFile"]).count() > 0:
                 session.query(File).filter(File.path == f["SourceFile"]).update(
                     {File.exif_file_info: json.dumps(
