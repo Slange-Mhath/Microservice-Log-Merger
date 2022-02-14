@@ -148,7 +148,7 @@ def test_key_list_file():
 
 @pytest.fixture()
 def test_occurrence_of_keys():
-    occurence_of_keys = True
+    occurence_of_keys = "True"
     return occurence_of_keys
 
 

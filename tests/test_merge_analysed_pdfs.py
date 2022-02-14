@@ -35,7 +35,7 @@ file = File()
 
 @pytest.fixture()
 def test_pdf_log():
-    pdf_logs = "tests/dummy_logs/pdf_analyser_log"
+    pdf_logs = "tests/dummy_logs/multiple_pdf_new.json"
     return pdf_logs
 
 
@@ -178,4 +178,10 @@ def test_add_pdf_info_to_db(test_pdf_log, test_session, test_db_file):
     for pdf_info_obj in pdf_info_objs:
         if pdf_info_obj.path == "test_pdfs/A+study+of+the+Middle+English+treatises+on+grammar+(Part+2+-+file+1)":
             pdf_info_json = json.loads(pdf_info_obj.pdf_info)
-            assert pdf_info_json["pdf_is_image"] is True
+            assert pdf_info_json["isImage"] is False
+            # Check if json information has keys: isImage, list_of_fonts, tool_version_info, word_count
+            json_keys = ["isImage", "list_of_fonts", "tool_version_info", "word_count"]
+            for key in json_keys:
+                assert key in pdf_info_json.keys()
+
+

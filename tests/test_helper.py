@@ -183,12 +183,12 @@ def test_read_key_list(test_key_list_file):
 
 
 def test_logg_keys_with_occurence(test_exif_log):
-    field_keys_in_f_log = {}
+    field_keys_in_f = {}
     exif_log_json = load_json(test_exif_log)
     sorted_keys = {}
     keys_in_f = {}
     for f in exif_log_json:
-        sorted_keys = logg_keys_with_occurence(f, field_keys_in_f_log)
+        sorted_keys = logg_keys_with_occurence(f, field_keys_in_f)
         for k, v in f.items():
             if k not in keys_in_f:
                 keys_in_f[k] = v

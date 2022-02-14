@@ -21,11 +21,3 @@ def add_pdf_info_to_db(pdf_analyser_log_path, session, File):
             "{} pdf info uploaded into the DB".format(pdf_counter))
         print("{} pdf info uploaded into the DB".format(pdf_counter))
 
-
-# def create_pdf_info(raw_pdf_info):
-#     formatted_pdf_info = {"pdf_tool_version": raw_pdf_info["tool_version_info"]}
-#     if raw_pdf_info["isText"] is False:
-#         formatted_pdf_info["pdf_is_image"] = True
-#     else:
-#         formatted_pdf_info["pdf_is_image"] = False
-#     return formatted_pdf_info
