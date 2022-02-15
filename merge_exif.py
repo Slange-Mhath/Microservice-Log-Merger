@@ -13,7 +13,7 @@ def add_exif_info_to_db(exif_log_path, session, File, f_key_list,
     sorted_field_keys_in_f_log = {}
     exif_counter = 0
     with open(exif_log_path, "r") as exif_log:
-        files = ijson.items(exif_log, "item")
+        files = ijson.items(exif_log, "item", use_float=True)
         for num, f in enumerate(files):
             if session.query(File).filter(File.path == f["SourceFile"]).count() > 0:
                 session.query(File).filter(File.path == f["SourceFile"]).update(
