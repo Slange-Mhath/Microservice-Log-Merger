@@ -57,7 +57,7 @@ def write_merged_f_log(session, File, output_file):
 
         with open(output_file, "a", encoding="utf-8") as open_f:
             for file_info in merged_output.values():
-                open_f.write(json.dumps(file_info, sort_keys=True, ensure_ascii=True))
+                open_f.write(json.dumps(file_info, sort_keys=True, ensure_ascii=True) + '\n')
 
 
 def read_key_list(key_list_f):
