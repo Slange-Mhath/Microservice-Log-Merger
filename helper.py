@@ -55,10 +55,10 @@ def write_merged_f_log(session, File, output_file):
         if f.mediainfo_file_info is not None:
             merged_output[f.path].update({
                 "mediainfo": json.loads(f.mediainfo_file_info)})
-    output = open(output_file, "w", encoding="utf-8")
-    for f in merged_output.values():
-        json.dump(f, output, sort_keys=True, ensure_ascii=True)
-        output.write("\n")
+    with open(output_file, "w", encoding="utf-8") as f:
+        for output_value in merged_output.values():
+            for chunk in json.JSONEncoder().iterencode(output_value):
+                f.write(chunk)
 
 
 def read_key_list(key_list_f):
