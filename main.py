@@ -30,7 +30,7 @@ class File(Base):
 # Connect to Postgres
 engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost/mlmdb')
 # Drop old DB
-Base.metadata.drop_all(engine)
+#Base.metadata.drop_all(engine)
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -49,26 +49,6 @@ def main(base_log_path, sf_log, exif_log, pdf_analyser_log, f_key_list=None, out
     logging.info("Memory (Before): {}Mb".format(mem_profile.memory_usage()))
     # print("Memory (Before): {}Mb".format(mem_profile.memory_usage()))
     t1 = time.process_time()
-    base_log_json = load_json(base_log_path)
-    add_ora_info_to_db(base_log_json, session, File)
-    if sf_log:
-        add_sf_info_to_db(sf_log, session, File)
-    if pdf_analyser_log:
-        add_pdf_info_to_db(pdf_analyser_log, session, File)
-    if exif_log:
-        add_exif_info_to_db(exif_log, session, File, f_key_list, occurrence_of_keys)
-        if not f_key_list:
-            logging.error(
-                "Please provide a file with the keys if you want to merge "
-                "the Exif log.")
-            return
-    if mediainfo_log:
-        add_mediainfo_info_to_db(f_key_list, mediainfo_log, session, File)
-        if not f_key_list:
-            logging.error(
-                "Please provide a file with the keys if you want to merge "
-                "the Mediainfo log.")
-            return
     write_merged_f_log(session, File, output_file)
     t2 = time.process_time()
     # print("Memory (After): {}Mb".format(mem_profile.memory_usage()))
