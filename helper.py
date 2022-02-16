@@ -39,11 +39,10 @@ def load_json(log_path):
 
 
 def write_merged_f_log(session, File, output_file):
-    merged_output = {}
     db_files = session.query(File).all()
     for f in db_files:
-        merged_output[f.path] = {"timestamp": f.timestamp,
-                                 "file": json.loads(f.base_file_info), }
+        merged_output = {f.path: {"timestamp": f.timestamp,
+                                  "file": json.loads(f.base_file_info), }}
         if f.siegfried_file_info is not None:
             merged_output[f.path].update(json.loads(f.siegfried_file_info))
         if f.pdf_info is not None:
@@ -55,10 +54,10 @@ def write_merged_f_log(session, File, output_file):
         if f.mediainfo_file_info is not None:
             merged_output[f.path].update({
                 "mediainfo": json.loads(f.mediainfo_file_info)})
-    with open(output_file, "w", encoding="utf-8") as f:
-        for output_value in merged_output.values():
-            for chunk in json.JSONEncoder().iterencode(output_value):
-                f.write(chunk)
+
+        with open(output_file, "a", encoding="utf-8") as open_f:
+            for file_info in merged_output.values():
+                open_f.write(json.dumps(file_info, sort_keys=True, ensure_ascii=True))
 
 
 def read_key_list(key_list_f):
