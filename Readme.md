@@ -67,13 +67,17 @@ To add the Mediainfo output to the merged file use the following parameters:
 **-mediainfo_log_path**  
 Specify the Exif file which should be added as key to the merged log. Please ensure that your file follows the example structure specified [here](#exif-output).
 
+**-jpylyzer_log_path**  
+Specify the Jpylzer file which should be added as key to the merged log. Please ensure that your file follows the example structure specified [here](#jpylyzer-output).
+
+
 **-f_key_list**  
 This parameter is <strong>mandatory if the mediainfo_log_path parameter is added. </strong> It should be used to specify a file path to a file which should contain the name of those keys from the log, which we want to merge.
 Please stick to the recommended file structure specified [here](#key-list).  
 
 
 Running the script with every optional parameter would look like this:  
-```python3 main.py -base_log_path "base_file.json" -sf_log_path "siegfried.log" -exif_log_path "exif.log" -dest_file_path "merged_log.json" -f_keys_to_del_path "key_list.log"```
+```python3 main.py -base_log_path "base_file.json" -sf_log_path "siegfried.log" -exif_log_path "exif.log" -mediainfo_log "mediainfo.log" -jpylyzer_log "jpylyzer.log -dest_file_path "merged_log.json" -f_keys_to_del_path "key_list.log"```
 
 ## File structures
 
@@ -354,6 +358,556 @@ Running the script with every optional parameter would look like this:
     }
 ]
 ```
+
+
+### Jpylyzer
+
+```json
+
+{
+  "jpylyzer": {
+    "toolInfo": {
+      "toolName": "jpylyzer",
+      "toolVersion": "2.1.0"
+    },
+    "file": [
+      {
+        "fileInfo": {
+          "fileName": "relax.jp2",
+          "filePath": "/ORA/PRD/DATA/ora_var/fedora/objects/2008/0520/10/26/uuid_7a79f51b-509f-476f-b1d0-1466dbfd9c78",
+          "fileSizeInBytes": 16298,
+          "fileLastModified": "2022-01-18T11:45:43.227749"
+        },
+        "statusInfo": {
+          "success": "True"
+        },
+        "isValid": "True",
+        "tests": "",
+        "properties": {
+          "signatureBox": "",
+          "fileTypeBox": {
+            "br": "jp2",
+            "minV": 0,
+            "cL": "jp2"
+          },
+          "jp2HeaderBox": {
+            "imageHeaderBox": {
+              "height": 300,
+              "width": 400,
+              "nC": 3,
+              "bPCSign": "unsigned",
+              "bPCDepth": 8,
+              "c": "jpeg2000",
+              "unkC": "yes",
+              "iPR": "no"
+            },
+            "colourSpecificationBox": {
+              "meth": "Restricted ICC",
+              "prec": 0,
+              "approx": 0,
+              "icc": {
+                "profileSize": 278,
+                "preferredCMMType": "",
+                "profileVersion": "2.2.0",
+                "profileClass": "Input Device Profile",
+                "colourSpace": "RGB",
+                "profileConnectionSpace": "XYZ",
+                "dateTimeString": "2001/01/01, 00:00:00",
+                "profileSignature": "acsp",
+                "primaryPlatform": "",
+                "embeddedProfile": "no",
+                "profileCannotBeUsedIndependently": "no",
+                "deviceManufacturer": "",
+                "deviceModel": "",
+                "transparency": "Transparent",
+                "glossiness": "Glossy",
+                "polarity": "Positive",
+                "colour": "Colour",
+                "renderingIntent": "Perceptual",
+                "connectionSpaceIlluminantX": 0.9642,
+                "connectionSpaceIlluminantY": 1,
+                "connectionSpaceIlluminantZ": 0.8249,
+                "profileCreator": "",
+                "profileID": 0,
+                "tag": [
+                  "rTRC",
+                  "gTRC",
+                  "bTRC",
+                  "rXYZ",
+                  "gXYZ",
+                  "bXYZ"
+                ],
+                "description": ""
+              }
+            },
+            "resolutionBox": {
+              "captureResolutionBox": {
+                "vRcN": 9289,
+                "vRcD": 32768,
+                "hRcN": 9289,
+                "hRcD": 32768,
+                "vRcE": 4,
+                "hRcE": 4,
+                "vRescInPixelsPerMeter": 2834.78,
+                "hRescInPixelsPerMeter": 2834.78,
+                "vRescInPixelsPerInch": 72,
+                "hRescInPixelsPerInch": 72
+              }
+            }
+          },
+          "contiguousCodestreamBox": {
+            "siz": {
+              "lsiz": 47,
+              "rsiz": "ISO/IEC 15444-1",
+              "xsiz": 400,
+              "ysiz": 300,
+              "xOsiz": 0,
+              "yOsiz": 0,
+              "xTsiz": 400,
+              "yTsiz": 300,
+              "xTOsiz": 0,
+              "yTOsiz": 0,
+              "numberOfTiles": 1,
+              "csiz": 3,
+              "ssizSign": [
+                "unsigned",
+                "unsigned",
+                "unsigned"
+              ],
+              "ssizDepth": [
+                8,
+                8,
+                8
+              ],
+              "xRsiz": [
+                1,
+                1,
+                1
+              ],
+              "yRsiz": [
+                1,
+                1,
+                1
+              ]
+            },
+            "cod": {
+              "lcod": 12,
+              "precincts": "default",
+              "sop": "no",
+              "eph": "no",
+              "order": "LRCP",
+              "layers": 12,
+              "multipleComponentTransformation": "yes",
+              "levels": 5,
+              "codeBlockWidth": 64,
+              "codeBlockHeight": 64,
+              "codingBypass": "no",
+              "resetOnBoundaries": "no",
+              "termOnEachPass": "no",
+              "vertCausalContext": "no",
+              "predTermination": "no",
+              "segmentationSymbols": "no",
+              "transformation": "5-3 reversible",
+              "precinctSizeX": [
+                32768,
+                32768,
+                32768,
+                32768,
+                32768,
+                32768
+              ],
+              "precinctSizeY": [
+                32768,
+                32768,
+                32768,
+                32768,
+                32768,
+                32768
+              ]
+            },
+            "qcd": {
+              "lqcd": 19,
+              "qStyle": "no quantization",
+              "guardBits": 1,
+              "epsilon": [
+                10,
+                11,
+                11,
+                12,
+                11
+              ]
+            },
+            "com": {
+              "lcom": 14,
+              "rcom": "ISO/IEC 8859-15 (Latin)",
+              "comment": "Kakadu-3.2"
+            },
+            "ppmCount": 0,
+            "plmCount": 0,
+            "tileParts": {
+              "tilePart": {
+                "sot": {
+                  "lsot": 10,
+                  "isot": 0,
+                  "psot": 15809,
+                  "tpsot": 0,
+                  "tnsot": 1
+                },
+                "pltCount": 0,
+                "pptCount": 0
+              }
+            }
+          },
+          "compressionRatio": 22.09
+        }
+      },
+      {
+        "fileInfo": {
+          "fileName": "sample1.jp2",
+          "filePath": "/Users/sebastianlange/Documents/Oxford/work/Micorservices/jpylyzer/sample1.jp2",
+          "fileSizeInBytes": 670265,
+          "fileLastModified": "2022-10-04T10:54:06.873575"
+        },
+        "statusInfo": {
+          "success": "True"
+        },
+        "isValid": "True",
+        "tests": "",
+        "properties": {
+          "signatureBox": "",
+          "fileTypeBox": {
+            "br": "jp2",
+            "minV": 0,
+            "cL": "jp2"
+          },
+          "jp2HeaderBox": {
+            "imageHeaderBox": {
+              "height": 3701,
+              "width": 2717,
+              "nC": 3,
+              "bPCSign": "unsigned",
+              "bPCDepth": 8,
+              "c": "jpeg2000",
+              "unkC": "yes",
+              "iPR": "no"
+            },
+            "colourSpecificationBox": {
+              "meth": "Enumerated",
+              "prec": 0,
+              "approx": 0,
+              "enumCS": "sRGB"
+            }
+          },
+          "uuidInfoBox": {
+            "uuidListBox": {
+              "nU": 2,
+              "uuid": [
+                "6a706a70-6a70-6a70-6a70-6a706a706a70",
+                "61626162-6162-6162-6162-616261626162"
+              ]
+            },
+            "urlBox": {
+              "version": 0,
+              "loc": "http://www.openplanetsfoundation.org/"
+            }
+          },
+          "xmlBox": {
+            "xmpmeta": {
+              "RDF": {
+                "Description": [
+                  {
+                    "format": "image/jpeg"
+                  },
+                  {
+                    "ColorSpace": 65535,
+                    "NativeDigest": "256,257,258,259,262,274,277,284,530,531,282,283,296,301,318,319,529,532,306,270,271,272,305,315,33432;7EF15F60B74B2599BAEDB6749C30991A",
+                    "PixelXDimension": 2717,
+                    "PixelYDimension": 3701
+                  },
+                  {
+                    "ColorMode": 3,
+                    "History": ""
+                  },
+                  {
+                    "BitsPerSample": {
+                      "Seq": {
+                        "li": 8
+                      }
+                    },
+                    "Compression": 1,
+                    "ImageLength": 3701,
+                    "ImageWidth": 2717,
+                    "NativeDigest": "256,257,258,259,262,274,277,284,530,531,282,283,296,301,318,319,529,532,306,270,271,272,305,315,33432;7EF15F60B74B2599BAEDB6749C30991A",
+                    "Orientation": 1,
+                    "PhotometricInterpretation": 2,
+                    "PlanarConfiguration": 1,
+                    "ResolutionUnit": 2,
+                    "SamplesPerPixel": 4,
+                    "Software": "Adobe Photoshop CS3 Windows",
+                    "XResolution": "72/1",
+                    "YCbCrSubSampling": "1 1",
+                    "YResolution": "72/1"
+                  },
+                  {
+                    "CreateDate": "2008-07-19T16:14:14-07:00",
+                    "CreatorTool": "Adobe Photoshop CS3 Windows",
+                    "MetadataDate": "2008-07-19T16:14:14-07:00",
+                    "ModifyDate": "2008-07-19T16:14:14"
+                  },
+                  {
+                    "DerivedFrom": {
+                      "instanceID": "uuid:AC48AD726754DD11BA6DEACED58C77FA"
+                    },
+                    "DocumentID": "uuid:6200E56DE155DD118C3CED023B237FE5",
+                    "InstanceID": "uuid:6300E56DE155DD118C3CED023B237FE5"
+                  }
+                ]
+              }
+            }
+          },
+          "contiguousCodestreamBox": {
+            "siz": {
+              "lsiz": 47,
+              "rsiz": "ISO/IEC 15444-1",
+              "xsiz": 2717,
+              "ysiz": 3701,
+              "xOsiz": 0,
+              "yOsiz": 0,
+              "xTsiz": 1024,
+              "yTsiz": 1024,
+              "xTOsiz": 0,
+              "yTOsiz": 0,
+              "numberOfTiles": 12,
+              "csiz": 3,
+              "ssizSign": [
+                "unsigned",
+                "unsigned",
+                "unsigned"
+              ],
+              "ssizDepth": [
+                8,
+                8,
+                8
+              ],
+              "xRsiz": [
+                1,
+                1,
+                1
+              ],
+              "yRsiz": [
+                1,
+                1,
+                1
+              ]
+            },
+            "cod": {
+              "lcod": 18,
+              "precincts": "user defined",
+              "sop": "yes",
+              "eph": "yes",
+              "order": "RPCL",
+              "layers": 6,
+              "multipleComponentTransformation": "yes",
+              "levels": 5,
+              "codeBlockWidth": 64,
+              "codeBlockHeight": 64,
+              "codingBypass": "no",
+              "resetOnBoundaries": "no",
+              "termOnEachPass": "no",
+              "vertCausalContext": "no",
+              "predTermination": "no",
+              "segmentationSymbols": "yes",
+              "transformation": "9-7 irreversible",
+              "precinctSizeX": [
+                128,
+                128,
+                128,
+                128,
+                256,
+                256
+              ],
+              "precinctSizeY": [
+                128,
+                128,
+                128,
+                128,
+                256,
+                256
+              ]
+            },
+            "qcd": {
+              "lqcd": 35,
+              "qStyle": "scalar expounded",
+              "guardBits": 2,
+              "mu": [
+                1816,
+                1770,
+                1770,
+                1724,
+                1792
+              ],
+              "epsilon": [
+                13,
+                13,
+                13,
+                13,
+                12
+              ]
+            },
+            "com": {
+              "lcom": 17,
+              "rcom": "ISO/IEC 8859-15 (Latin)",
+              "comment": "Jpylyzer demo"
+            },
+            "ppmCount": 0,
+            "plmCount": 0,
+            "tileParts": {
+              "tilePart": [
+                {
+                  "sot": {
+                    "lsot": 10,
+                    "isot": 0,
+                    "psot": 67161,
+                    "tpsot": 0,
+                    "tnsot": 1
+                  },
+                  "pltCount": 0,
+                  "pptCount": 0
+                },
+                {
+                  "sot": {
+                    "lsot": 10,
+                    "isot": 1,
+                    "psot": 99064,
+                    "tpsot": 0,
+                    "tnsot": 1
+                  },
+                  "pltCount": 0,
+                  "pptCount": 0
+                },
+                {
+                  "sot": {
+                    "lsot": 10,
+                    "isot": 2,
+                    "psot": 36130,
+                    "tpsot": 0,
+                    "tnsot": 1
+                  },
+                  "pltCount": 0,
+                  "pptCount": 0
+                },
+                {
+                  "sot": {
+                    "lsot": 10,
+                    "isot": 3,
+                    "psot": 56048,
+                    "tpsot": 0,
+                    "tnsot": 1
+                  },
+                  "pltCount": 0,
+                  "pptCount": 0
+                },
+                {
+                  "sot": {
+                    "lsot": 10,
+                    "isot": 4,
+                    "psot": 140022,
+                    "tpsot": 0,
+                    "tnsot": 1
+                  },
+                  "pltCount": 0,
+                  "pptCount": 0
+                },
+                {
+                  "sot": {
+                    "lsot": 10,
+                    "isot": 5,
+                    "psot": 24008,
+                    "tpsot": 0,
+                    "tnsot": 1
+                  },
+                  "pltCount": 0,
+                  "pptCount": 0
+                },
+                {
+                  "sot": {
+                    "lsot": 10,
+                    "isot": 6,
+                    "psot": 46691,
+                    "tpsot": 0,
+                    "tnsot": 1
+                  },
+                  "pltCount": 0,
+                  "pptCount": 0
+                },
+                {
+                  "sot": {
+                    "lsot": 10,
+                    "isot": 7,
+                    "psot": 62671,
+                    "tpsot": 0,
+                    "tnsot": 1
+                  },
+                  "pltCount": 0,
+                  "pptCount": 0
+                },
+                {
+                  "sot": {
+                    "lsot": 10,
+                    "isot": 8,
+                    "psot": 26306,
+                    "tpsot": 0,
+                    "tnsot": 1
+                  },
+                  "pltCount": 0,
+                  "pptCount": 0
+                },
+                {
+                  "sot": {
+                    "lsot": 10,
+                    "isot": 9,
+                    "psot": 45614,
+                    "tpsot": 0,
+                    "tnsot": 1
+                  },
+                  "pltCount": 0,
+                  "pptCount": 0
+                },
+                {
+                  "sot": {
+                    "lsot": 10,
+                    "isot": 10,
+                    "psot": 38428,
+                    "tpsot": 0,
+                    "tnsot": 1
+                  },
+                  "pltCount": 0,
+                  "pptCount": 0
+                },
+                {
+                  "sot": {
+                    "lsot": 10,
+                    "isot": 11,
+                    "psot": 25064,
+                    "tpsot": 0,
+                    "tnsot": 1
+                  },
+                  "pltCount": 0,
+                  "pptCount": 0
+                }
+              ]
+            }
+          },
+          "compressionRatio": 45.01
+        }
+      }
+    ]
+  }
+}
+
+```
+
+
 
 ### Key list
 

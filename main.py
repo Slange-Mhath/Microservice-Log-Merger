@@ -4,6 +4,7 @@ from merge_siegfried import add_sf_info_to_db
 from merge_exif import add_exif_info_to_db
 from merge_mediainfo import add_mediainfo_info_to_db
 from merge_analysed_pdfs import add_pdf_info_to_db
+from merge_jpylyzer import add_jpylyzer_info_to_db
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, update
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
@@ -24,6 +25,7 @@ class File(Base):
     siegfried_file_info = Column("siegfried_file_info", String)
     exif_file_info = Column("exif_file_info", String)
     mediainfo_file_info = Column("mediainfo_file_info", String)
+    jpylyzer_file_info = Column("jpylyzer_file_info", String)
     pdf_info = Column("pdf_info", String)
 
 
@@ -38,9 +40,10 @@ file = File()
 
 
 def main(base_log_path, sf_log, exif_log, pdf_analyser_log, f_key_list=None, output_file=None,
-         mediainfo_log=None, occurrence_of_keys=None):
+         mediainfo_log=None, jpylyzer_log=None, occurrence_of_keys=None):
     """
     Calls the different functions in order to merge and write the final output
+    :param jpylyzer_log: takes the path to the jpylyzer log file
     :param dpms_log_path: takes the path to the file integrity file
     :param sf_log: takes the path to the siegfried log file
     :param output_file: takes an optional user specified output file
@@ -69,6 +72,8 @@ def main(base_log_path, sf_log, exif_log, pdf_analyser_log, f_key_list=None, out
                 "Please provide a file with the keys if you want to merge "
                 "the Mediainfo log.")
             return
+    if jpylyzer_log:
+        add_jpylyzer_info_to_db(jpylyzer_log, session, File)
     write_merged_f_log(session, File, output_file)
     t2 = time.process_time()
     # print("Memory (After): {}Mb".format(mem_profile.memory_usage()))
@@ -106,10 +111,13 @@ if __name__ == "__main__":
     parser.add_argument("-mediainfo_log_path", "--mediainfo_log_path",
                         dest="mediainfo_log_path",
                         help="Path to the mediainfo log file")
+    parser.add_argument("-jpylyzer_log_path", "--jpylyzer_log_path",
+                        dest="jpylyzer_log_path",
+                        help="Path to the jpylyzer log file")
     parser.add_argument("-occurrence_of_keys", "--occurrence_of_keys",
                         dest="occurrence_of_keys", default=False,
                         help="Set to true if you want to get information about "
                              "the occurrence of the keys in the log")
     args = parser.parse_args()
     main(args.base_log_path, args.sf_log_path, args.exif_log_path, args.pdf_analyser_log_path,
-         args.f_key_list, args.dest_file_path, args.mediainfo_log_path, args.occurrence_of_keys)
+         args.f_key_list, args.dest_file_path, args.mediainfo_log_path, args.jpylyzer_log_path, args.occurrence_of_keys)
