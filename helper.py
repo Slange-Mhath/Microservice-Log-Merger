@@ -54,6 +54,9 @@ def write_merged_f_log(session, File, output_file):
         if f.mediainfo_file_info is not None:
             merged_output[f.path].update({
                 "mediainfo": json.loads(f.mediainfo_file_info)})
+        if f.jpylyzer_file_info is not None:
+            merged_output[f.path].update({
+                "jpylyzer": json.loads(f.jpylyzer_file_info)})
 
         with open(output_file, "a", encoding="utf-8") as open_f:
             for file_info in merged_output.values():
