@@ -3,23 +3,18 @@ import logging
 
 
 def add_jpylyzer_info_to_db(jp_f_log_path, session, File):
+    jp_counter = 0
     with open(jp_f_log_path, "r") as jp_log:
-        jp_json = json.load(jp_log)
-        jp_counter = 0
-        # Here needs to go an exception if jp_json has no jpylyzer and then no file key
-        for num, jp_f in enumerate(jp_json['jpylyzer']['file']):
-            if num < 2:
-                print(jp_f)
-            # Todo: it has to iterate over file
-            # Todo: which then would mean we need to change that to only be ['fileInfo'][
-            #                 'filePath']
-            if session.query(File).filter(File.path == jp_f['fileInfo'][
+        lines = jp_log.readlines()
+        for num, line in enumerate(lines):
+            jp_f = json.loads(line)
+            if session.query(File).filter(File.path == jp_f['file']['fileInfo'][
                 'filePath']).count() > 0:
                 jp_counter += 1
                 session.query(File).filter(
-                    File.path == jp_f['fileInfo']['filePath']).update(
+                    File.path == jp_f['file']['fileInfo']['filePath']).update(
                     {File.jpylyzer_file_info: json.dumps(
-                        relabel_jpylyzer_log(jp_f))},
+                        relabel_jpylyzer_log(jp_f['file']))},
                     synchronize_session=False)
                 if num % 1000 == 0:
                     session.commit()
