@@ -40,8 +40,6 @@ The MLM uses the postgresql db, which should be set up like this:
 Specify the path to the base log file which should be enriched with the Siegfried log. Please ensure that your file follows the example structure specified [here](#base_file).  
 **-sf_log_path**  
 Specify the Siegfried file which should be merged into the base log. Please ensure that your file follows the example structure specified [here](#siegfried-output).  
-**-dest_file_path**  
-Specify the file path to the file where the merged output should be written to. 
 
 ### Optional parameters:
 
@@ -74,6 +72,28 @@ Specify the Jpylzer file which should be added as key to the merged log. Please 
 **-f_key_list**  
 This parameter is <strong>mandatory if the mediainfo_log_path parameter is added. </strong> It should be used to specify a file path to a file which should contain the name of those keys from the log, which we want to merge.
 Please stick to the recommended file structure specified [here](#key-list).  
+
+**-persist_db**  
+This parameter defines if the state of the DB, from the last execution 
+should be persisted. Default will be False to ensure a clean state of 
+the DB but especially for debugging purposes it can be useful to set it to True.
+
+**-dest_file_path**  
+Specify the file path to the file where the merged output should be written 
+to. If its not specified there won't be any output written to a file.
+
+**-db_host**
+Specify the host of the database. Default is localhost.
+
+**-db_name**
+Specify the name of the database. Default is mlmdb.
+
+**-db_user**
+Specify the user of the database. Default is mlm.
+
+**-db_password**
+Specify the password of the database. Default is mlm.
+
 
 
 Running the script with every optional parameter would look like this:  

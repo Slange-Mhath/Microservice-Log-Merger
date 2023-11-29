@@ -4,6 +4,10 @@ import logging
 log = logging.getLogger(__name__)
 
 
+def get_database_url(database, user, password, host):
+    return f'postgresql+psycopg2://{user}:{password}@{host}/{database}'
+
+
 def add_ora_info_to_db(ora_log, session, File):
     base_file_counter = 0
     for num, f in enumerate(ora_log["files"]):

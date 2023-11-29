@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from helper import load_json, add_ora_info_to_db, write_merged_f_log
+from helper import load_json, add_ora_info_to_db, write_merged_f_log, get_database_url
 from merge_siegfried import add_sf_info_to_db
 from merge_exif import add_exif_info_to_db
 from merge_mediainfo import add_mediainfo_info_to_db
@@ -39,7 +39,8 @@ class File(Base):
 # file = File()
 
 
-def main(base_log_path, sf_log, exif_log, pdf_analyser_log, f_key_list=None, output_file=None,
+def main(db_name, db_user, db_password, db_host, base_log_path, sf_log,
+         exif_log, pdf_analyser_log, f_key_list=None, output_file=None,
          mediainfo_log=None, jpylyzer_log=None, occurrence_of_keys=None,
          persist_db=False):
     """
@@ -51,8 +52,15 @@ def main(base_log_path, sf_log, exif_log, pdf_analyser_log, f_key_list=None, out
     :return:
     """
     # Connect to Postgres
+
+    connection_string = get_database_url(
+        db_name,
+        db_user,
+        db_password,
+        db_host
+    )
     engine = create_engine(
-        'postgresql+psycopg2://postgres:postgres@localhost/mlmdb')
+        connection_string)
     # Drop old DB
     if not persist_db:
         Base.metadata.drop_all(engine)
@@ -132,7 +140,15 @@ if __name__ == "__main__":
     parser.add_argument("-persist_db", "--persist_db", dest="persist_db",
                         help="Set to true if you want to persist the DB from "
                              "the last execution")
+    parser.add_argument('-db_name', type=str, help='Name of the database',
+                        default="mlmdb")
+    parser.add_argument('-db_user', type=str, help='Database user', default="postgres")
+    parser.add_argument('-db_password', type=str, help='User password',
+                        default="postgres")
+    parser.add_argument('-db_host', type=str, help='Database host address',
+                        default="localhost")
     args = parser.parse_args()
-    main(args.base_log_path, args.sf_log_path, args.exif_log_path, args.pdf_analyser_log_path,
+    main(args.db_name, args.db_user, args.db_password, args.db_host,
+         args.base_log_path, args.sf_log_path, args.exif_log_path, args.pdf_analyser_log_path,
          args.f_key_list, args.dest_file_path, args.mediainfo_log_path,
          args.jpylyzer_log_path, args.occurrence_of_keys, args.persist_db)
