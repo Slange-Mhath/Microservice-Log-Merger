@@ -29,18 +29,19 @@ class File(Base):
     pdf_info = Column("pdf_info", String)
 
 
-# Connect to Postgres
-engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost/mlmdb')
-# Drop old DB
-Base.metadata.drop_all(engine)
-Base.metadata.create_all(bind=engine)
-Session = sessionmaker(bind=engine)
-session = Session()
-file = File()
+# # Connect to Postgres
+# engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost/mlmdb')
+# # Drop old DB
+# Base.metadata.drop_all(engine)
+# Base.metadata.create_all(bind=engine)
+# Session = sessionmaker(bind=engine)
+# session = Session()
+# file = File()
 
 
 def main(base_log_path, sf_log, exif_log, pdf_analyser_log, f_key_list=None, output_file=None,
-         mediainfo_log=None, jpylyzer_log=None, occurrence_of_keys=None):
+         mediainfo_log=None, jpylyzer_log=None, occurrence_of_keys=None,
+         persist_db=False):
     """
     Calls the different functions in order to merge and write the final output
     :param jpylyzer_log: takes the path to the jpylyzer log file
@@ -49,6 +50,15 @@ def main(base_log_path, sf_log, exif_log, pdf_analyser_log, f_key_list=None, out
     :param output_file: takes an optional user specified output file
     :return:
     """
+    # Connect to Postgres
+    engine = create_engine(
+        'postgresql+psycopg2://postgres:postgres@localhost/mlmdb')
+    # Drop old DB
+    if not persist_db:
+        Base.metadata.drop_all(engine)
+        Base.metadata.create_all(bind=engine)
+    session = sessionmaker(bind=engine)()
+    file = File()
     logging.info("Memory (Before): {}Mb".format(mem_profile.memory_usage()))
     # print("Memory (Before): {}Mb".format(mem_profile.memory_usage()))
     t1 = time.process_time()
@@ -118,6 +128,10 @@ if __name__ == "__main__":
                         dest="occurrence_of_keys", default=False,
                         help="Set to true if you want to get information about "
                              "the occurrence of the keys in the log")
+    parser.add_argument("-persist_db", "--persist_db", dest="persist_db",
+                        help="Set to true if you want to persist the DB from "
+                             "the last execution")
     args = parser.parse_args()
     main(args.base_log_path, args.sf_log_path, args.exif_log_path, args.pdf_analyser_log_path,
-         args.f_key_list, args.dest_file_path, args.mediainfo_log_path, args.jpylyzer_log_path, args.occurrence_of_keys)
+         args.f_key_list, args.dest_file_path, args.mediainfo_log_path,
+         args.jpylyzer_log_path, args.occurrence_of_keys, args.persist_db)

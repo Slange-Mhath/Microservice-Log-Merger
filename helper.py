@@ -39,28 +39,35 @@ def load_json(log_path):
 
 
 def write_merged_f_log(session, File, output_file):
-    db_files = session.query(File).all()
-    for f in db_files:
-        merged_output = {f.path: {"timestamp": f.timestamp,
-                                  "file": json.loads(f.base_file_info), }}
-        if f.siegfried_file_info is not None:
-            merged_output[f.path].update(json.loads(f.siegfried_file_info))
-        if f.pdf_info is not None:
-            merged_output[f.path].update({
-                "pdf_info": json.loads(f.pdf_info)})
-        if f.exif_file_info is not None:
-            merged_output[f.path].update(
-                {"exif": json.loads(f.exif_file_info)})
-        if f.mediainfo_file_info is not None:
-            merged_output[f.path].update({
-                "mediainfo": json.loads(f.mediainfo_file_info)})
-        if f.jpylyzer_file_info is not None:
-            merged_output[f.path].update({
-                "jpylyzer": json.loads(f.jpylyzer_file_info)})
-
+    try:
+        db_files = session.query(File).all()
         with open(output_file, "a", encoding="utf-8") as open_f:
-            for file_info in merged_output.values():
-                open_f.write(json.dumps(file_info, sort_keys=True, ensure_ascii=True) + '\n')
+            for f in db_files:
+                try:
+                    merged_output = {f.path: {"timestamp": f.timestamp,
+                                              "file": json.loads(f.base_file_info), }}
+                    if f.siegfried_file_info is not None:
+                        merged_output[f.path].update(json.loads(f.siegfried_file_info))
+                    if f.pdf_info is not None:
+                        merged_output[f.path].update({
+                            "pdf_info": json.loads(f.pdf_info)})
+                    if f.exif_file_info is not None:
+                        merged_output[f.path].update(
+                            {"exif": json.loads(f.exif_file_info)})
+                    if f.mediainfo_file_info is not None:
+                        merged_output[f.path].update({
+                            "mediainfo": json.loads(f.mediainfo_file_info)})
+                    if f.jpylyzer_file_info is not None:
+                        merged_output[f.path].update({
+                            "jpylyzer": json.loads(f.jpylyzer_file_info)})
+                    for file_info in merged_output.values():
+                        open_f.write(json.dumps(file_info, sort_keys=True, ensure_ascii=True) + '\n')
+                except Exception as inner_error:
+                    logging.error(f"Error processing file {f.path}: {inner_error}")
+    except Exception as outer_error:
+        logging.error(
+            f"Error querying files from the database: {outer_error}")
+
 
 
 def read_key_list(key_list_f):
