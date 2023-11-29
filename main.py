@@ -84,7 +84,8 @@ def main(base_log_path, sf_log, exif_log, pdf_analyser_log, f_key_list=None, out
             return
     if jpylyzer_log:
         add_jpylyzer_info_to_db(jpylyzer_log, session, File)
-    write_merged_f_log(session, File, output_file)
+    if output_file:
+        write_merged_f_log(session, File, output_file)
     t2 = time.process_time()
     # print("Memory (After): {}Mb".format(mem_profile.memory_usage()))
     logging.info("Memory (After): {}Mb".format(mem_profile.memory_usage()))
