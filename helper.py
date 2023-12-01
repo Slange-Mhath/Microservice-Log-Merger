@@ -44,9 +44,9 @@ def load_json(log_path):
 
 def write_merged_f_log(session, File, output_file):
     try:
-        db_files = session.query(File).all()
+        # db_files = session.query(File).all()
         with open(output_file, "a", encoding="utf-8") as open_f:
-            for f in db_files:
+            for f in session.query(File).yield_per(100):
                 try:
                     merged_output = {f.path: {"timestamp": f.timestamp,
                                               "file": json.loads(f.base_file_info), }}
